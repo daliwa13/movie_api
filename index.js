@@ -4,7 +4,6 @@ const express = require('express'),
 // import built in node modules fs and path
     fs = require('fs'),  
     path = require('path');
-const { writer } = require('repl');
 
 let topMovies = [
     {
@@ -88,25 +87,20 @@ app.use(morgan('combined', { stream: accessLogStream }));
 // middleware to serve static files
 app.use(express.static('public'))
 
-// error handling
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).send('Something broke!');
-});
-
 // GET requests
 app.get('/', (req, res) => {
     res.send('Navigate to /documentation for API documentation.<br>Navigate to /movies to see the list of top movies.');
-});
-
-app.get('/documentation.html', (req, res) => {
-    res.sendFile('documentation.html', { root: __dirname });
 });
 
 app.get('/movies', (req, res) => {
     res.json(topMovies);
 });
 
+// error handling
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+});
 
 // listen for requests
 app.listen(8080, () => {

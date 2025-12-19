@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.js"
   },
   "repository": {
     "type": "git",
@@ -19,11 +20,13 @@
   },
   "homepage": "https://github.com/daliwa13/movie_api#readme",
   "devDependencies": {
-    "eslint": "^9.39.2"
+    "eslint": "^9.39.2",
+    "nodemon": "^3.1.11"
   },
   "dependencies": {
     "body-parser": "^2.2.1",
     "express": "^5.2.1",
-    "morgan": "^1.10.1"
+    "morgan": "^1.10.1",
+    "uuid": "^13.0.0"
   }
 }

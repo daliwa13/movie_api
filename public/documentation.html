@@ -7,6 +7,7 @@
 </head>
 <body>
     <h1>Welcome to myFlix Documentation</h1>
+    <p>Base URL: <code>http://localhost:8080</code></p>
     <p>This documentation provides an overview of the myFlix application, its features, and how to use it.</p>
     <h2>Installation</h2>
     <p>In order to use the App you need to download the files from GitHub repository and install the necessary dependencies by running <code>npm install</code> in the project directory.</p>
@@ -23,6 +24,328 @@
             <li>Allow users to remove a movie from their list of favorites</li>
             <li>Allow existing users to deregister</li>
         </ul>
+    <h2>API Endpoints</h2>
+        <ul>
+            <li><a href="#GET-movies">/movies</a></li>
+            <li><a href="#GET-movies-title">/movies/[title]</a></li>
+            <li><a href="#GET-genres-genreName">/movies/genre/[genreName]</a></li>
+            <li><a href="#GET-directors-name">/directors/[name]</a></li>
+            <li><a href="#POST-users">/users</a></li> <!-- Here add also DELETE -->
+            <li><a href="#PUT-users-username">/users/[id]</a></li>
+            <li><a href="#PUT-users-favorites">/users/[username]/[favorites]</a></li> <!-- Here add also DELETE -->
+        </ul>
+        <div class="endpoint" id="GET-movies">
+            <h3>GET /movies</h3>
+        
+            <p><strong>Description:</strong>
+                Returns a list of all movies.</p>
+        
+            <p><strong>HTTP Method:</strong> <code>GET</code></p>
+        
+            <p><strong>URL:</strong> <code>http://localhost:8080/movies</code></p>
+        
+            <p><strong>Path Parameters:</strong> None</p>
+        
+            <p><strong>Request Body:</strong> None</p>
+        
+            <p><strong>Success Response:</strong></p>
+            <ul>
+                <li><strong>Status Code:</strong> <code>200 OK</code></li>
+                <li><strong>Content-Type:</strong> <code>application/json</code></li>
+            </ul>
+        
+            <p><strong>Example Response:</strong></p>
+            <pre class="endpoint-response"><code>
+            [
+                {
+                    "title": 'Rubber',
+                    "director": {
+                        "name": 'Quentin Dupieux',
+                        "bio": 'Quentin Dupieux is a French filmmaker and electronic musician known for his surreal and absurdist style. He
+                        often incorporates elements of dark humor and unconventional storytelling in his works.',
+                        "birthYear": 1974
+                    },
+                    "writer": 'Quentin Dupieux',
+                    "year": 2010,
+                    "Genre": 'Horror',
+                    "imageUrl": 'https://m.media-amazon.com/images/M/MV5BMTgyMTU1Nzc4MV5BMl5BanBnXkFtZTcwNTIwMzYzNA@@._V1_.jpg',
+                    "description": 'A homicidal car tire, discovering it has destructive psionic power, sets its sights on a desert town
+                    once a mysterious woman becomes its obsession.'
+                },
+                {
+                    "title": 'The Lord of the Rings: The Return of the King',
+                    "director": {
+                        "name": 'Peter Jackson',
+                        "bio": 'Peter Jackson is a New Zealand film director, producer, and screenwriter. He is best known for directing the
+                        epic fantasy film trilogy "The Lord of the Rings" and "The Hobbit".',
+                        "birthYear": 1961
+                    },
+                    "writer": 'Fran Walsh, Philippa Boyens, Peter Jackson',
+                    "year": 2003,
+                    "Genre": 'Fantasy',
+                    "imageUrl":
+                    'view-source:https://m.media-amazon.com/images/M/MV5BMTZkMjBjNWMtZGI5OC00MGU0LTk4ZTItODg2NWM3NTVmNWQ4XkEyXkFqcGc@._V1_.jpg',
+                    "description": 'Gandalf and Aragorn lead the World of Men against Sauron\'s army to draw his gaze from Frodo and Sam as
+                    they approach Mount Doom with the One Ring.'           
+                }
+            ]</code></pre>
+        
+            <p><strong>Error Responses:</strong></p>
+            <ul>
+                <li><code>500 Internal Server Error</code> – Server failed to retrieve movies</li>
+            </ul>    
+        </div>
+        <div class="endpoint" id="GET-movies-title">
+            <h3>GET /movies/:title</h3>
+        
+            <p><strong>Description:</strong><br>
+                Returns a single movie matching the provided title.</p>
+        
+            <p><strong>HTTP Method:</strong> <code>GET</code></p>
+        
+            <p><strong>URL:</strong> <code>http://localhost:8080/movies/:title</code></p>
+        
+            <p><strong>Path Parameters:</strong></p>
+            <ul>
+                <li><code>title</code> (string) – The exact title of the movie</li>
+            </ul>
+        
+            <p><strong>Request Body:</strong> None</p>
+        
+            <p><strong>Success Response:</strong></p>
+            <ul>
+                <li><strong>Status Code:</strong> <code>200 OK</code></li>
+                <li><strong>Content-Type:</strong> <code>application/json</code></li>
+            </ul>
+        
+            <p><strong>Example Response:</strong></p>
+            <pre class="endpoint-response"><code>
+            {
+                "title": 'Fight Club',
+                "director": {
+                    "name": 'David Fincher',
+                    "bio": 'David Fincher is an American film director known for his dark and stylish films, often exploring themes of psychological thriller and crime.',
+                    "birthYear": 1962
+                },
+                "writer": 'Chuck Palahniuk (novel), Jim Uhls (screenplay)',
+                "year": 1999,
+                "Genre": 'Drama',
+                "imageUrl":
+                'https://m.media-amazon.com/images/M/MV5BOTgyOGQ1NDItNGU3Ny00MjU3LTg2YWEtNmEyYjBiMjI1Y2M5XkEyXkFqcGc@._V1_.jpg',
+                "description": 'An insomniac office worker and a devil-may-care soap maker form an underground fight club that evolves
+                into something much, much more.'          
+            },</code></pre>
+        
+            <p><strong>Error Responses:</strong></p>
+            <ul>
+                <li><code>400 Bad Request</code> – Movie not found</li>
+            </ul>    
+        </div>
+        <div class="endpoint" id="GET-genres-genreName">
+            <h3>GET /movies/genre/:genreName</h3>
+        
+            <p><strong>Description:</strong><br>
+                Returns a single genre matching the provided genre name.</p>
+        
+            <p><strong>HTTP Method:</strong> <code>GET</code></p>
+        
+            <p><strong>URL:</strong> <code>http://localhost:8080/movies/genre/:genreName</code></p>
+        
+            <p><strong>Path Parameters:</strong></p>
+            <ul>
+                <li><code>genreName</code> (string) – The exact name of the genre</li>
+            </ul>
+        
+            <p><strong>Request Body:</strong> None</p>
+        
+            <p><strong>Success Response:</strong></p>
+            <ul>
+                <li><strong>Status Code:</strong> <code>200 OK</code></li>
+                <li><strong>Content-Type:</strong> <code>application/json</code></li>
+            </ul>
+        
+            <p><strong>Example Response:</strong></p>
+            <pre class="endpoint-response"><code>
+            {
+                "Genre": 'Horror'
+            },</code></pre>
+        
+            <p><strong>Error Responses:</strong></p>
+            <ul>
+                <li><code>400 Bad Request</code> – Genre not found</li>
+            </ul>    
+        </div>
+        <div class="endpoint" id="GET-directors-name">
+            <h3>GET /movies/directors/:directorName</h3>
+        
+            <p><strong>Description:</strong><br>
+                Returns information about a director matching the provided director name.</p>
+        
+            <p><strong>HTTP Method:</strong> <code>GET</code></p>
+        
+            <p><strong>URL:</strong> <code>http://localhost:8080/movies/directors/:directorName</code></p>
+        
+            <p><strong>Path Parameters:</strong></p>
+            <ul>
+                <li><code>directorName</code> (string) – The exact name of the director</li>
+            </ul>
+        
+            <p><strong>Request Body:</strong> None</p>
+        
+            <p><strong>Success Response:</strong></p>
+            <ul>
+                <li><strong>Status Code:</strong> <code>200 OK</code></li>
+                <li><strong>Content-Type:</strong> <code>application/json</code></li>
+            </ul>
+        
+            <p><strong>Example Response:</strong></p>
+            <pre class="endpoint-response"><code>
+            {
+                "name": 'Quentin Dupieux',
+                "bio": 'Quentin Dupieux is a French filmmaker and electronic musician known for his surreal and absurdist style. He
+                often incorporates elements of dark humor and unconventional storytelling in his works.',
+                "birthYear": 1974       
+            }</code></pre>
+        
+            <p><strong>Error Responses:</strong></p>
+            <ul>
+                <li><code>400 Bad Request</code> – Director not found</li>
+            </ul>    
+        </div>
+        <div class="endpoint" id="POST-users">
+            <h3>POST /users</h3>
+        
+            <p><strong>Description:</strong><br>
+                Adds a new user to the system with the given name.</p>
+        
+            <p><strong>HTTP Method:</strong> <code>POST</code></p>
+        
+            <p><strong>URL:</strong> <code>http://localhost:8080/users</code></p>
+        
+            <p><strong>Path Parameters:</strong> None</p>
+        
+            <p><strong>Request Body:</strong> application/json</p>
+            <p><strong>Example Request:</strong></p>
+            <pre class="endpoint-request"><code>
+            {
+                "name": 'Kate'      
+            }</code></pre>
+        
+            <p><strong>Success Response:</strong></p>
+            <ul>
+                <li><strong>Status Code:</strong> <code>200 OK</code></li>
+                <li><strong>Content-Type:</strong> <code>application/json</code></li>
+            </ul>
+        
+            <p><strong>Example Response:</strong></p>
+            <pre class="endpoint-response"><code>
+            {
+                "name": 'Kate',
+                "id": 3,
+                "favorites": []       
+            }</code></pre>
+        
+            <p><strong>Error Responses:</strong></p>
+            <ul>
+                <li><code>400 Bad Request</code> – User name is required</li>
+            </ul>    
+        </div>
+        <div class="endpoint" id="PUT-users-username">
+            <h3>PUT /users/:id</h3>
+        
+            <p><strong>Description:</strong><br>
+                Updates an existing user's name in the system with the given data based on user's ID.</p>
+        
+            <p><strong>HTTP Method:</strong> <code>PUT</code></p>
+        
+            <p><strong>URL:</strong> <code>http://localhost:8080/users/:id</code></p>
+        
+            <p><strong>Path Parameters:</strong> <code>id</code> (User ID)</p>
+        
+            <p><strong>Request Body:</strong> application/json</p>
+            <p><strong>Example Request:</strong></p>
+            <pre class="endpoint-request"><code>
+            {
+                "name": 'John'      
+            }</code></pre>
+        
+            <p><strong>Success Response:</strong></p>
+            <ul>
+                <li><strong>Status Code:</strong> <code>200 OK</code></li>
+                <li><strong>Content-Type:</strong> <code>application/json</code></li>
+            </ul>
+        
+            <p><strong>Example Response:</strong></p>
+            <pre class="endpoint-response"><code>
+            {
+                "name": 'John',
+                "id": 1,
+                "favorites": []       
+            }</code></pre>
+        
+            <p><strong>Error Responses:</strong></p>
+            <ul>
+                <li><code>400 Bad Request</code> – User not found</li>
+            </ul>    
+        </div>
+        <div class="endpoint" id="PUT-users-favorites">
+            <h3>PUT /users/:id/:movieTitle</h3>
+        
+            <p><strong>Description:</strong><br>
+                Updates favorite movies of the user in the system with the given data based on user's ID.</p>
+        
+            <p><strong>HTTP Method:</strong> <code>PUT</code></p>
+        
+            <p><strong>URL:</strong> <code>http://localhost:8080/users/:id/:movieTitle</code></p>
+        
+            <p><strong>Path Parameters:</strong>
+                <code>id</code> (User ID), <code>movieTitle</code> (Movie Title)</p>
+        
+            <p><strong>Request Body:</strong> None</p>
+        
+            <p><strong>Success Response:</strong></p>
+            <ul>
+                <li><strong>Status Code:</strong> <code>200 OK</code></li>
+                <li><strong>Content-Type:</strong> <code>String</code></li>
+            </ul>
+        
+            <p><strong>Example Response:</strong></p>
+            <pre class="endpoint-response">Favorite movies for user 2 updated successfully by adding Pulp Fiction</pre>
+        
+            <p><strong>Error Responses:</strong></p>
+            <ul>
+                <li><code>400 Bad Request</code> – User not found</li>
+            </ul>    
+        </div>
+        <div class="endpoint" id="DELETE-users-favorites">
+            <h3>PUT /users/:id/:movieTitle</h3>
+        
+            <p><strong>Description:</strong><br>
+                Updates favorite movies of the user in the system with the given data based on user's ID.</p>
+        
+            <p><strong>HTTP Method:</strong> <code>DELETE</code></p>
+        
+            <p><strong>URL:</strong> <code>http://localhost:8080/users/:id/:movieTitle</code></p>
+        
+            <p><strong>Path Parameters:</strong>
+                <code>id</code> (User ID), <code>movieTitle</code> (Movie Title)</p>
+        
+            <p><strong>Request Body:</strong> None</p>
+        
+            <p><strong>Success Response:</strong></p>
+            <ul>
+                <li><strong>Status Code:</strong> <code>200 OK</code></li>
+                <li><strong>Content-Type:</strong> <code>String</code></li>
+            </ul>
+        
+            <p><strong>Example Response:</strong></p>
+            <pre class="endpoint-response">Favorite movies for user 2 updated successfully by removing Pulp Fiction</pre>
+        
+            <p><strong>Error Responses:</strong></p>
+            <ul>
+                <li><code>400 Bad Request</code> – User not found</li>
+            </ul>    
+        </div>
     <h2>Tech Stack</h2>
         <ul>
             <li>Node.js</li>

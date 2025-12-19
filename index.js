@@ -22,7 +22,7 @@ let movies = [
         },
         "writer": 'Quentin Dupieux',
         "year": 2010,
-        "Genre": 'Horror, Sci-Fi',
+        "Genre": 'Horror',
         "imageUrl": 'https://m.media-amazon.com/images/M/MV5BMTgyMTU1Nzc4MV5BMl5BanBnXkFtZTcwNTIwMzYzNA@@._V1_.jpg',
         "description": 'A homicidal car tire, discovering it has destructive psionic power, sets its sights on a desert town once a mysterious woman becomes its obsession.'
     },
@@ -35,7 +35,7 @@ let movies = [
         },
         "writer": 'Fran Walsh, Philippa Boyens, Peter Jackson',
         "year": 2003,
-        "Genre": 'Adventure, Drama, Fantasy',
+        "Genre": 'Fantasy',
         "imageUrl": 'view-source:https://m.media-amazon.com/images/M/MV5BMTZkMjBjNWMtZGI5OC00MGU0LTk4ZTItODg2NWM3NTVmNWQ4XkEyXkFqcGc@._V1_.jpg',
         "description": 'Gandalf and Aragorn lead the World of Men against Sauron\'s army to draw his gaze from Frodo and Sam as they approach Mount Doom with the One Ring.'
     },
@@ -48,7 +48,7 @@ let movies = [
         },
         "writer": 'Eric Roth',
         "year": 1994,
-        "Genre": 'Drama, Romance',
+        "Genre": 'Drama',
         "imageUrl": 'view-source:https://m.media-amazon.com/images/M/MV5BM2JmYjc5MWEtNjY1MS00NGQwLTlhMWEtMGM1YjkxODllMmYyXkEyXkFqcGc@._V1_.jpg',
         "description": 'The presidencies of Kennedy and Johnson, the Vietnam War, the Watergate scandal and other historical events unfold from the perspective of an Alabama man with an IQ of 75, whose only desire is to be reunited with his childhood sweetheart.'
     },
@@ -74,7 +74,7 @@ let movies = [
         },
         "writer": 'Christopher Nolan',
         "year": 2010,
-        "Genre": 'Action, Adventure, Sci-Fi',
+        "Genre": 'Action',
         "imageUrl": 'https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_.jpg',
         "description": 'A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O., but his tragic past may doom the project and his team to disaster.'
     },
@@ -87,7 +87,7 @@ let movies = [
         },
         "writer": 'Thomas Harris (novel), Ted Tally (screenplay)',
         "year": 1991,
-        "Genre": 'Crime, Drama, Thriller',
+        "Genre": 'Thriller',
         "imageUrl": 'https://m.media-amazon.com/images/M/MV5BNDdhOGJhYzctYzYwZC00YmI2LWI0MjctYjg4ODdlMDExYjBlXkEyXkFqcGc@._V1_.jpg',
         "description": 'A young F.B.I. cadet must receive the help of an incarcerated and manipulative cannibal killer to help catch another serial killer, a madman who skins his victims.'
     },
@@ -100,7 +100,7 @@ let movies = [
         },
         "writer": 'Todd Phillips, Scott Silver, Bob Kane',
         "year": 2019,
-        "Genre": 'Crime, Drama, Thriller',
+        "Genre": 'Crime',
         "imageUrl": 'https://m.media-amazon.com/images/M/MV5BNzY3OWQ5NDktNWQ2OC00ZjdlLThkMmItMDhhNDk3NTFiZGU4XkEyXkFqcGc@._V1_.jpg',
         "description": 'Arthur Fleck, a party clown and a failed stand-up comedian, leads an impoverished life with his ailing mother. However, when society shuns him and brands him as a freak, he decides to embrace the life of chaos in Gotham City.'
     },
@@ -113,7 +113,7 @@ let movies = [
         },
         "writer": 'Olivier Nakache, Éric Toledano, Philippe Pozzo di Borgo',
         "year": 2011,
-        "Genre": 'Biography, Comedy, Drama',
+        "Genre": 'Biography',
         "imageUrl": 'https://m.media-amazon.com/images/M/MV5BMTYxNDA3MDQwNl5BMl5BanBnXkFtZTcwNTU4Mzc1Nw@@._V1_.jpg',
         "description": 'After he becomes a quadriplegic from a paragliding accident, an aristocrat hires a young man from the projects to be his caregiver.'
     },
@@ -126,7 +126,7 @@ let movies = [
         },
         "writer": 'Quentin Tarantino',
         "year": 2012,
-        "Genre": 'Drama, Western',
+        "Genre": 'Western',
         "imageUrl": 'view-source:https://m.media-amazon.com/images/M/MV5BMjIyNTQ5NjQ1OV5BMl5BanBnXkFtZTcwODg1MDU4OA@@._V1_.jpg',
         "description": 'With the help of a German bounty hunter, a freed slave sets out to rescue his wife from a brutal Mississippi plantation owner.'
     },
@@ -139,7 +139,7 @@ let movies = [
         },
         "writer": 'Quentin Tarantino, Roger Avary',
         "year": 1994,
-        "Genre": 'Crime, Drama',
+        "Genre": 'Drama',
         "imageUrl": 'view-source:https://m.media-amazon.com/images/M/MV5BYTViYTE3ZGQtNDBlMC00ZTAyLTkyODMtZGRiZDg0MjA2YThkXkEyXkFqcGc@._V1_.jpg',
         "description": 'The lives of two mob hitmen, a boxer, a gangster\'s wife, and a pair of diner bandits intertwine in four tales of violence and redemption.'
     }
@@ -173,8 +173,118 @@ app.get('/', (req, res) => {
     res.send('Navigate to /documentation for API documentation.<br>Navigate to /movies to see the list of top movies.');
 });
 
+// CREATE new user
+app.post('/users', (req, res) => {
+    const newUser = req.body;
+
+    if (newUser.name) {
+        newUser.id = uuid.v4();
+        if (!newUser.favorites) {
+            newUser.favorites = [];
+        }
+        users.push(newUser);
+        res.status(201).json(newUser);
+    } else {
+        res.status(400).send('User name is required');
+    }
+});
+
+// UPDATE existing user's name
+app.put('/users/:id', (req, res) => {
+    const { id } = req.params;
+    const updatedUser = req.body;
+
+    let user = users.find( user => user.id == id);
+
+    if (user) {
+        user.name = updatedUser.name;
+        res.status(200).json(user);
+    } else {
+        res.status(404).send('User not found');
+    }
+
+});
+
+// UPDATE user's favorite movies
+app.put('/users/:id/:movieTitle', (req, res) => {
+    const { id, movieTitle } = req.params;
+
+    let user = users.find(user => user.id == id);
+
+    if (user) {
+        user.favorites.push(movieTitle);
+        res.status(200).send(`Favorite movies for user ${id} updated successfully by adding ${movieTitle}`);
+    } else {
+        res.status(404).send('User not found');
+    }
+});
+
+// DELETE user's favorite movies
+app.delete('/users/:id/:movieTitle', (req, res) => {
+    const { id, movieTitle } = req.params;
+
+    let user = users.find(user => user.id == id);
+
+    if (user) {
+        user.favorites = user.favorites.filter( title => title !== movieTitle);
+        res.status(200).send(`Favorite movies for user ${id} updated successfully by removing ${movieTitle}`);
+    } else {
+        res.status(404).send('User not found');
+    }
+});
+
+// DELETE user
+app.delete('/users/:id', (req, res) => {
+    const { id } = req.params;
+
+    let user = users.find(user => user.id == id);
+
+    if (user) {
+        users = users.filter( user => user.id != id);
+        res.status(200).send(`User ${id} deleted successfully`);
+    } else {
+        res.status(404).send('User not found');
+    }
+});
+
+//READ all movies
 app.get('/movies', (req, res) => {
-    res.json(topMovies);
+    res.status(200).json(movies);
+});
+// READ movie by title
+app.get('/movies/:title', (req, res) => {
+    const { title } = req.params;
+    const movie = movies.find( (movie) => movie.title === title);
+
+        if (movie) {
+            res.status(200).json(movie);
+        } else {
+            res.status(400).send('Movie not found');
+        }
+});
+
+// READ Genre by movie title
+app.get('/movies/genre/:genreName', (req, res) => {
+    const { genreName } = req.params;
+    const genre = movies.find( movie => movie.Genre == genreName).Genre;
+
+    if (genre) {
+        res.status(200).json(genre);
+    } else {
+        res.status(400).send('Genre not found');
+    }
+});
+
+// READ Director by movie title
+app.get('/movies/directors/:directorName', (req, res) => {
+    const { directorName } = req.params;
+    const director = movies.find(movie => movie.director.name == directorName).director;
+
+    if (director) {
+        res.status(200).json(director);
+    } else {
+        res.status(400).send('Director not found');
+    }
 });
 
 // error handling

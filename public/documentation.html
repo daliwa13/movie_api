@@ -1,21 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>myFlix</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/css/bootstrap.min.css"
+        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <style>
+        .btn-secondary {
+            margin-bottom: 10px;
+            width: 100%;
+            font-size: 1.25rem;
+            text-align: left;
+        }
+    </style>
 </head>
+
 <body>
-    <h1>Welcome to myFlix Documentation</h1>
-    <p>Base URL: <code>http://localhost:8080</code></p>
-    <p>This documentation provides an overview of the myFlix application, its features, and how to use it.</p>
-    <h2>Installation</h2>
-    <p>In order to use the App you need to download the files from GitHub repository and install the necessary dependencies by running <code>npm install</code> in the project directory.</p>
-    <h2>Features</h2>
+    <div class="container">
+        <h1>Welcome to myFlix Documentation</h1>
+        <p>Base URL: <code>http://localhost:8080</code></p>
+        <p>This documentation provides an overview of the myFlix application, its features, and how to use it.</p>
+        <h2>Table of Contents</h2>
+        <ul>
+            <li><a href="#installation">Installation</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#api-endpoints">API Endpoints</a></li>
+            <li><a href="#tech-stack">Tech Stack</a></li>
+        </ul>
+        <h2>Installation</h2>
+        <p>In order to use the App you need to download the files from GitHub repository and install the necessary
+            dependencies by running <code>npm install</code> in the project directory.</p>
+        <h2>Features</h2>
         <ul>
             <li>Return a list of ALL movies to the user</li>
             <li>Return data (description, genre, director, image URL, whether it’s featured or not) about a
-            single movie by title to the user</li>
+                single movie by title to the user</li>
             <li>Return data about a genre (description) by name/title (e.g., “Thriller”)</li>
             <li>Return data about a director (bio, birth year, death year) by name</li>
             <li>Allow new users to register</li>
@@ -24,26 +45,26 @@
             <li>Allow users to remove a movie from their list of favorites</li>
             <li>Allow existing users to deregister</li>
         </ul>
-    <h2>API Endpoints</h2>
+        <h2>API Endpoints</h2>
         <ul>
             <li><a href="#GET-movies">/movies</a></li>
             <li><a href="#GET-movies-title">/movies/[title]</a></li>
             <li><a href="#GET-genres-genreName">/movies/genre/[genreName]</a></li>
-            <li><a href="#GET-directors-name">/directors/[name]</a></li>
-            <li><a href="#POST-users">/users</a></li> <!-- Here add also DELETE -->
+            <li><a href="#GET-directors-name">/movies/directors/[name]</a></li>
+            <li><a href="#POST-users">/users</a></li>
             <li><a href="#PUT-users-username">/users/[id]</a></li>
-            <li><a href="#PUT-users-favorites">/users/[username]/[favorites]</a></li> <!-- Here add also DELETE -->
+            <li><a href="#PUT-users-favorites">/users/[id]/[title]</a></li>
         </ul>
         <h3>Overview table</h3>
-        <table id="endpoint-table">
+        <table id="endpoint-table" class="table table-striped">
             <tr>
-                <th>Endpoint</th>
-                <th>HTTP Method</th>
-                <th>Description</th>
-                <th>Request body data format</th>
-                <th>Response body data format</th>
+                <th scope="col">Endpoint</th>
+                <th scope="col">HTTP Method</th>
+                <th scope="col">Description</th>
+                <th scope="col">Request body data format</th>
+                <th scope="col">Response body data format</th>
             </tr>
-            <tr>
+            <tr class="table-striped">
                 <td>/movies</td>
                 <td>GET</td>
                 <td>Returns a list of all movies.</td>
@@ -57,7 +78,7 @@
                 <td>None</td>
                 <td>JSON</td>
             </tr>
-            <tr>
+            <tr class="table-striped">
                 <td>/movies/genre/:genreName</td>
                 <td>GET</td>
                 <td>Returns a single genre matching the provided genre name.</td>
@@ -71,7 +92,7 @@
                 <td>None</td>
                 <td>JSON</td>
             </tr>
-            <tr>
+            <tr class="table-striped">
                 <td>/users</td>
                 <td>POST</td>
                 <td>Adds a new user to the system with the given name.</td>
@@ -85,7 +106,7 @@
                 <td>JSON</td>
                 <td>JSON</td>
             </tr>
-            <tr>
+            <tr class="table-striped">
                 <td>/users/:id/:movieTitle</td>
                 <td>PUT</td>
                 <td>Updates favorite movies of the user in the system with the given data based on user's ID.</td>
@@ -95,33 +116,35 @@
             <tr>
                 <td>/users/:id/:movieTitle</td>
                 <td>DELETE</td>
-                <td>Removes a movie from favorite movies of the user in the system with the given data based on user's ID.</td>
+                <td>Removes a movie from favorite movies of the user in the system with the given data based on user's
+                    ID.</td>
                 <td>None</td>
                 <td>String</td>
             </tr>
         </table>
         <div class="endpoint" id="GET-movies">
-            <h3>GET /movies</h3>
-        
-            <p><strong>Description:</strong>
-                Returns a list of all movies.</p>
-        
-            <p><strong>HTTP Method:</strong> <code>GET</code></p>
-        
-            <p><strong>URL:</strong> <code>http://localhost:8080/movies</code></p>
-        
-            <p><strong>Path Parameters:</strong> None</p>
-        
-            <p><strong>Request Body:</strong> None</p>
-        
-            <p><strong>Success Response:</strong></p>
-            <ul>
-                <li><strong>Status Code:</strong> <code>200 OK</code></li>
-                <li><strong>Content-Type:</strong> <code>application/json</code></li>
-            </ul>
-        
-            <p><strong>Example Response:</strong></p>
-            <pre class="endpoint-response"><code>
+            <button class="btn btn-secondary" type="button" data-toggle="collapse" data-target="#GET-movies-card"
+                aria-expanded="false" aria-controls="GET-movies-card">GET /movies</button>
+            <div class="collapse" id="GET-movies-card">
+                <p><strong>Description:</strong>
+                    Returns a list of all movies.</p>
+
+                <p><strong>HTTP Method:</strong> <code>GET</code></p>
+
+                <p><strong>URL:</strong> <code>http://localhost:8080/movies</code></p>
+
+                <p><strong>Path Parameters:</strong> None</p>
+
+                <p><strong>Request Body:</strong> None</p>
+
+                <p><strong>Success Response:</strong></p>
+                <ul>
+                    <li><strong>Status Code:</strong> <code>200 OK</code></li>
+                    <li><strong>Content-Type:</strong> <code>application/json</code></li>
+                </ul>
+
+                <p><strong>Example Response:</strong></p>
+                <pre class="endpoint-response"><code>
             [
                 {
                     "title": 'Rubber',
@@ -155,37 +178,39 @@
                     they approach Mount Doom with the One Ring.'           
                 }
             ]</code></pre>
-        
-            <p><strong>Error Responses:</strong></p>
-            <ul>
-                <li><code>500 Internal Server Error</code> – Server failed to retrieve movies</li>
-            </ul>    
+
+                <p><strong>Error Responses:</strong></p>
+                <ul>
+                    <li><code>500 Internal Server Error</code> – Server failed to retrieve movies</li>
+                </ul>
+            </div>
         </div>
         <div class="endpoint" id="GET-movies-title">
-            <h3>GET /movies/:title</h3>
-        
-            <p><strong>Description:</strong><br>
-                Returns a single movie matching the provided title.</p>
-        
-            <p><strong>HTTP Method:</strong> <code>GET</code></p>
-        
-            <p><strong>URL:</strong> <code>http://localhost:8080/movies/:title</code></p>
-        
-            <p><strong>Path Parameters:</strong></p>
-            <ul>
-                <li><code>title</code> (string) – The exact title of the movie</li>
-            </ul>
-        
-            <p><strong>Request Body:</strong> None</p>
-        
-            <p><strong>Success Response:</strong></p>
-            <ul>
-                <li><strong>Status Code:</strong> <code>200 OK</code></li>
-                <li><strong>Content-Type:</strong> <code>application/json</code></li>
-            </ul>
-        
-            <p><strong>Example Response:</strong></p>
-            <pre class="endpoint-response"><code>
+            <button class="btn btn-secondary" type="button" data-toggle="collapse" data-target="#GET-movies-title-card"
+                aria-expanded="false" aria-controls="GET-movies-title-card">GET /movies/:title</button>
+            <div class="collapse" id="GET-movies-title-card">
+                <p><strong>Description:</strong><br>
+                    Returns a single movie matching the provided title.</p>
+
+                <p><strong>HTTP Method:</strong> <code>GET</code></p>
+
+                <p><strong>URL:</strong> <code>http://localhost:8080/movies/:title</code></p>
+
+                <p><strong>Path Parameters:</strong></p>
+                <ul>
+                    <li><code>title</code> (string) – The exact title of the movie</li>
+                </ul>
+
+                <p><strong>Request Body:</strong> None</p>
+
+                <p><strong>Success Response:</strong></p>
+                <ul>
+                    <li><strong>Status Code:</strong> <code>200 OK</code></li>
+                    <li><strong>Content-Type:</strong> <code>application/json</code></li>
+                </ul>
+
+                <p><strong>Example Response:</strong></p>
+                <pre class="endpoint-response"><code>
             {
                 "title": 'Fight Club',
                 "director": {
@@ -201,218 +226,234 @@
                 "description": 'An insomniac office worker and a devil-may-care soap maker form an underground fight club that evolves
                 into something much, much more.'          
             },</code></pre>
-        
-            <p><strong>Error Responses:</strong></p>
-            <ul>
-                <li><code>400 Bad Request</code> – Movie not found</li>
-            </ul>    
+
+                <p><strong>Error Responses:</strong></p>
+                <ul>
+                    <li><code>400 Bad Request</code> – Movie not found</li>
+                </ul>
+            </div>
         </div>
         <div class="endpoint" id="GET-genres-genreName">
-            <h3>GET /movies/genre/:genreName</h3>
-        
-            <p><strong>Description:</strong><br>
-                Returns a single genre matching the provided genre name.</p>
-        
-            <p><strong>HTTP Method:</strong> <code>GET</code></p>
-        
-            <p><strong>URL:</strong> <code>http://localhost:8080/movies/genre/:genreName</code></p>
-        
-            <p><strong>Path Parameters:</strong></p>
-            <ul>
-                <li><code>genreName</code> (string) – The exact name of the genre</li>
-            </ul>
-        
-            <p><strong>Request Body:</strong> None</p>
-        
-            <p><strong>Success Response:</strong></p>
-            <ul>
-                <li><strong>Status Code:</strong> <code>200 OK</code></li>
-                <li><strong>Content-Type:</strong> <code>application/json</code></li>
-            </ul>
-        
-            <p><strong>Example Response:</strong></p>
-            <pre class="endpoint-response"><code>
-            {
-                "Genre": 'Horror'
-            },</code></pre>
-        
-            <p><strong>Error Responses:</strong></p>
-            <ul>
-                <li><code>400 Bad Request</code> – Genre not found</li>
-            </ul>    
+            <button class="btn btn-secondary" type="button" data-toggle="collapse" data-target="#GET-movies-genreName-card"
+                aria-expanded="false" aria-controls="GET-movies-genreName-card">GET /movies/genre/:genreName</button>
+            <div class="collapse" id="GET-movies-genreName-card">
+                <p><strong>Description:</strong><br>
+                    Returns a single genre matching the provided genre name.</p>
+
+                <p><strong>HTTP Method:</strong> <code>GET</code></p>
+
+                <p><strong>URL:</strong> <code>http://localhost:8080/movies/genre/:genreName</code></p>
+
+                <p><strong>Path Parameters:</strong></p>
+                <ul>
+                    <li><code>genreName</code> (string) – The exact name of the genre</li>
+                </ul>
+
+                <p><strong>Request Body:</strong> None</p>
+
+                <p><strong>Success Response:</strong></p>
+                <ul>
+                    <li><strong>Status Code:</strong> <code>200 OK</code></li>
+                    <li><strong>Content-Type:</strong> <code>application/json</code></li>
+                </ul>
+
+                <p><strong>Example Response:</strong></p>
+                <pre class="endpoint-response"><code>
+                {
+                    "Genre": 'Horror'
+                },</code></pre>
+
+                <p><strong>Error Responses:</strong></p>
+                <ul>
+                    <li><code>400 Bad Request</code> – Genre not found</li>
+                </ul>
+            </div>
         </div>
         <div class="endpoint" id="GET-directors-name">
-            <h3>GET /movies/directors/:directorName</h3>
-        
-            <p><strong>Description:</strong><br>
-                Returns information about a director matching the provided director name.</p>
-        
-            <p><strong>HTTP Method:</strong> <code>GET</code></p>
-        
-            <p><strong>URL:</strong> <code>http://localhost:8080/movies/directors/:directorName</code></p>
-        
-            <p><strong>Path Parameters:</strong></p>
-            <ul>
-                <li><code>directorName</code> (string) – The exact name of the director</li>
-            </ul>
-        
-            <p><strong>Request Body:</strong> None</p>
-        
-            <p><strong>Success Response:</strong></p>
-            <ul>
-                <li><strong>Status Code:</strong> <code>200 OK</code></li>
-                <li><strong>Content-Type:</strong> <code>application/json</code></li>
-            </ul>
-        
-            <p><strong>Example Response:</strong></p>
-            <pre class="endpoint-response"><code>
-            {
-                "name": 'Quentin Dupieux',
-                "bio": 'Quentin Dupieux is a French filmmaker and electronic musician known for his surreal and absurdist style. He
-                often incorporates elements of dark humor and unconventional storytelling in his works.',
-                "birthYear": 1974       
-            }</code></pre>
-        
-            <p><strong>Error Responses:</strong></p>
-            <ul>
-                <li><code>400 Bad Request</code> – Director not found</li>
-            </ul>    
+            <button class="btn btn-secondary" type="button" data-toggle="collapse" data-target="#GET-movies-directors-card"
+                aria-expanded="false" aria-controls="GET-movies-directors-card">GET /movies/directors/:directorName</button>
+            <div class="collapse" id="GET-movies-directors-card">
+                <p><strong>Description:</strong><br>
+                    Returns information about a director matching the provided director name.</p>
+
+                <p><strong>HTTP Method:</strong> <code>GET</code></p>
+
+                <p><strong>URL:</strong> <code>http://localhost:8080/movies/directors/:directorName</code></p>
+
+                <p><strong>Path Parameters:</strong></p>
+                <ul>
+                    <li><code>directorName</code> (string) – The exact name of the director</li>
+                </ul>
+
+                <p><strong>Request Body:</strong> None</p>
+
+                <p><strong>Success Response:</strong></p>
+                <ul>
+                    <li><strong>Status Code:</strong> <code>200 OK</code></li>
+                    <li><strong>Content-Type:</strong> <code>application/json</code></li>
+                </ul>
+
+                <p><strong>Example Response:</strong></p>
+                <pre class="endpoint-response"><code>
+                {
+                    "name": 'Quentin Dupieux',
+                    "bio": 'Quentin Dupieux is a French filmmaker and electronic musician known for his surreal and absurdist style. He
+                    often incorporates elements of dark humor and unconventional storytelling in his works.',
+                    "birthYear": 1974       
+                }</code></pre>
+
+                <p><strong>Error Responses:</strong></p>
+                <ul>
+                    <li><code>400 Bad Request</code> – Director not found</li>
+                </ul>
+            </div>
         </div>
         <div class="endpoint" id="POST-users">
-            <h3>POST /users</h3>
-        
-            <p><strong>Description:</strong><br>
-                Adds a new user to the system with the given name.</p>
-        
-            <p><strong>HTTP Method:</strong> <code>POST</code></p>
-        
-            <p><strong>URL:</strong> <code>http://localhost:8080/users</code></p>
-        
-            <p><strong>Path Parameters:</strong> None</p>
-        
-            <p><strong>Request Body:</strong> application/json</p>
-            <p><strong>Example Request:</strong></p>
-            <pre class="endpoint-request"><code>
-            {
-                "name": 'Kate'      
-            }</code></pre>
-        
-            <p><strong>Success Response:</strong></p>
-            <ul>
-                <li><strong>Status Code:</strong> <code>200 OK</code></li>
-                <li><strong>Content-Type:</strong> <code>JSON</code></li>
-            </ul>
-        
-            <p><strong>Example Response:</strong></p>
-            <pre class="endpoint-response"><code>
-            {
-                "name": 'Kate',
-                "id": 3,
-                "favorites": []       
-            }</code></pre>
-        
-            <p><strong>Error Responses:</strong></p>
-            <ul>
-                <li><code>400 Bad Request</code> – User name is required</li>
-            </ul>    
+            <button class="btn btn-secondary" type="button" data-toggle="collapse" data-target="#POST-users-card"
+                aria-expanded="false" aria-controls="POST-users-card">POST /users</button>
+            <div class="collapse" id="POST-users-card">
+                <p><strong>Description:</strong><br>
+                    Adds a new user to the system with the given name.</p>
+
+                <p><strong>HTTP Method:</strong> <code>POST</code></p>
+
+                <p><strong>URL:</strong> <code>http://localhost:8080/users</code></p>
+
+                <p><strong>Path Parameters:</strong> None</p>
+
+                <p><strong>Request Body:</strong> application/json</p>
+                <p><strong>Example Request:</strong></p>
+                <pre class="endpoint-request"><code>
+                {
+                    "name": 'Kate'      
+                }</code></pre>
+
+                <p><strong>Success Response:</strong></p>
+                <ul>
+                    <li><strong>Status Code:</strong> <code>200 OK</code></li>
+                    <li><strong>Content-Type:</strong> <code>JSON</code></li>
+                </ul>
+
+                <p><strong>Example Response:</strong></p>
+                <pre class="endpoint-response"><code>
+                {
+                    "name": 'Kate',
+                    "id": 3,
+                    "favorites": []       
+                }</code></pre>
+
+                <p><strong>Error Responses:</strong></p>
+                <ul>
+                    <li><code>400 Bad Request</code> – User name is required</li>
+                </ul>
+            </div>
         </div>
         <div class="endpoint" id="PUT-users-username">
-            <h3>PUT /users/:id</h3>
-        
-            <p><strong>Description:</strong><br>
-                Updates an existing user's name in the system with the given data based on user's ID.</p>
-        
-            <p><strong>HTTP Method:</strong> <code>PUT</code></p>
-        
-            <p><strong>URL:</strong> <code>http://localhost:8080/users/:id</code></p>
-        
-            <p><strong>Path Parameters:</strong> <code>id</code> (User ID)</p>
-        
-            <p><strong>Request Body:</strong> application/json</p>
-            <p><strong>Example Request:</strong></p>
-            <pre class="endpoint-request"><code>
-            {
-                "name": 'John'      
-            }</code></pre>
-        
-            <p><strong>Success Response:</strong></p>
-            <ul>
-                <li><strong>Status Code:</strong> <code>200 OK</code></li>
-                <li><strong>Content-Type:</strong> <code>JSON</code></li>
-            </ul>
-        
-            <p><strong>Example Response:</strong></p>
-            <pre class="endpoint-response"><code>
-            {
-                "name": 'John',
-                "id": 1,
-                "favorites": []       
-            }</code></pre>
-        
-            <p><strong>Error Responses:</strong></p>
-            <ul>
-                <li><code>400 Bad Request</code> – User not found</li>
-            </ul>    
+            <button class="btn btn-secondary" type="button" data-toggle="collapse" data-target="#PUT-users-username-card"
+                aria-expanded="false" aria-controls="PUT-users-username-card">PUT /users/:id</button>
+            <div class="collapse" id="PUT-users-username-card">
+                <p><strong>Description:</strong><br>
+                    Updates an existing user's name in the system with the given data based on user's ID.</p>
+
+                <p><strong>HTTP Method:</strong> <code>PUT</code></p>
+
+                <p><strong>URL:</strong> <code>http://localhost:8080/users/:id</code></p>
+
+                <p><strong>Path Parameters:</strong> <code>id</code> (User ID)</p>
+
+                <p><strong>Request Body:</strong> application/json</p>
+                <p><strong>Example Request:</strong></p>
+                <pre class="endpoint-request"><code>
+                {
+                    "name": 'John'      
+                }</code></pre>
+
+                <p><strong>Success Response:</strong></p>
+                <ul>
+                    <li><strong>Status Code:</strong> <code>200 OK</code></li>
+                    <li><strong>Content-Type:</strong> <code>JSON</code></li>
+                </ul>
+
+                <p><strong>Example Response:</strong></p>
+                <pre class="endpoint-response"><code>
+                {
+                    "name": 'John',
+                    "id": 1,
+                    "favorites": []       
+                }</code></pre>
+
+                <p><strong>Error Responses:</strong></p>
+                <ul>
+                    <li><code>400 Bad Request</code> – User not found</li>
+                </ul>
+            </div>
         </div>
         <div class="endpoint" id="PUT-users-favorites">
-            <h3>PUT /users/:id/:movieTitle</h3>
-        
-            <p><strong>Description:</strong><br>
-                Updates favorite movies of the user in the system with the given data based on user's ID.</p>
-        
-            <p><strong>HTTP Method:</strong> <code>PUT</code></p>
-        
-            <p><strong>URL:</strong> <code>http://localhost:8080/users/:id/:movieTitle</code></p>
-        
-            <p><strong>Path Parameters:</strong>
-                <code>id</code> (User ID), <code>movieTitle</code> (Movie Title)</p>
-        
-            <p><strong>Request Body:</strong> None</p>
-        
-            <p><strong>Success Response:</strong></p>
-            <ul>
-                <li><strong>Status Code:</strong> <code>200 OK</code></li>
-                <li><strong>Content-Type:</strong> <code>String</code></li>
-            </ul>
-        
-            <p><strong>Example Response:</strong></p>
-            <pre class="endpoint-response">Favorite movies for user 2 updated successfully by adding Pulp Fiction</pre>
-        
-            <p><strong>Error Responses:</strong></p>
-            <ul>
-                <li><code>400 Bad Request</code> – User not found</li>
-            </ul>    
+            <button class="btn btn-secondary" type="button" data-toggle="collapse" data-target="#PUT-users-favorites-card"
+                aria-expanded="false" aria-controls="PUT-users-favorites-card">PUT /users/:id/:movieTitle</button>
+            <div class="collapse" id="PUT-users-favorites-card">
+                <p><strong>Description:</strong><br>
+                    Updates favorite movies of the user in the system with the given data based on user's ID.</p>
+
+                <p><strong>HTTP Method:</strong> <code>PUT</code></p>
+
+                <p><strong>URL:</strong> <code>http://localhost:8080/users/:id/:movieTitle</code></p>
+
+                <p><strong>Path Parameters:</strong>
+                    <code>id</code> (User ID), <code>movieTitle</code> (Movie Title)
+                </p>
+
+                <p><strong>Request Body:</strong> None</p>
+
+                <p><strong>Success Response:</strong></p>
+                <ul>
+                    <li><strong>Status Code:</strong> <code>200 OK</code></li>
+                    <li><strong>Content-Type:</strong> <code>String</code></li>
+                </ul>
+
+                <p><strong>Example Response:</strong></p>
+                <pre class="endpoint-response">Favorite movies for user 2 updated successfully by adding Pulp Fiction</pre>
+
+                <p><strong>Error Responses:</strong></p>
+                <ul>
+                    <li><code>400 Bad Request</code> – User not found</li>
+                </ul>
+            </div>
         </div>
         <div class="endpoint" id="DELETE-users-favorites">
-            <h3>PUT /users/:id/:movieTitle</h3>
-        
-            <p><strong>Description:</strong><br>
-                Updates favorite movies of the user in the system with the given data based on user's ID.</p>
-        
-            <p><strong>HTTP Method:</strong> <code>DELETE</code></p>
-        
-            <p><strong>URL:</strong> <code>http://localhost:8080/users/:id/:movieTitle</code></p>
-        
-            <p><strong>Path Parameters:</strong>
-                <code>id</code> (User ID), <code>movieTitle</code> (Movie Title)</p>
-        
-            <p><strong>Request Body:</strong> None</p>
-        
-            <p><strong>Success Response:</strong></p>
-            <ul>
-                <li><strong>Status Code:</strong> <code>200 OK</code></li>
-                <li><strong>Content-Type:</strong> <code>String</code></li>
-            </ul>
-        
-            <p><strong>Example Response:</strong></p>
-            <pre class="endpoint-response">Favorite movies for user 2 updated successfully by removing Pulp Fiction</pre>
-        
-            <p><strong>Error Responses:</strong></p>
-            <ul>
-                <li><code>400 Bad Request</code> – User not found</li>
-            </ul>    
+            <button class="btn btn-secondary" type="button" data-toggle="collapse" data-target="#DELETE-users-favorites-card"
+                aria-expanded="false" aria-controls="DELETE-users-favorites-card">DELETE /users/:id/:movieTitle</button>
+            <div class="collapse" id="DELETE-users-favorites-card">
+                <p><strong>Description:</strong><br>
+                    Updates favorite movies of the user in the system with the given data based on user's ID.</p>
+
+                <p><strong>HTTP Method:</strong> <code>DELETE</code></p>
+
+                <p><strong>URL:</strong> <code>http://localhost:8080/users/:id/:movieTitle</code></p>
+
+                <p><strong>Path Parameters:</strong>
+                    <code>id</code> (User ID), <code>movieTitle</code> (Movie Title)
+                </p>
+
+                <p><strong>Request Body:</strong> None</p>
+
+                <p><strong>Success Response:</strong></p>
+                <ul>
+                    <li><strong>Status Code:</strong> <code>200 OK</code></li>
+                    <li><strong>Content-Type:</strong> <code>String</code></li>
+                </ul>
+
+                <p><strong>Example Response:</strong></p>
+                <pre
+                    class="endpoint-response">Favorite movies for user 2 updated successfully by removing Pulp Fiction</pre>
+
+                <p><strong>Error Responses:</strong></p>
+                <ul>
+                    <li><code>400 Bad Request</code> – User not found</li>
+                </ul>
+            </div>
         </div>
-    <h2>Tech Stack</h2>
+        <h2>Tech Stack</h2>
         <ul>
             <li>Node.js</li>
             <li>REST</li>
@@ -420,5 +461,17 @@
             <li>MongoDB</li>
             <li>Postman for API testing</li>
         </ul>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.6/dist/umd/popper.min.js"
+        integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/js/bootstrap.min.js"
+        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+        crossorigin="anonymous"></script>
 </body>
+
 </html>

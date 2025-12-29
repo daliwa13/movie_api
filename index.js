@@ -1,15 +1,27 @@
+// Set up mongoose connection to operate on MongoDB database
+const mongoose = require('mongoose');
+const Models = require('./models.js');
+
+const Movies = Models.Movie;
+const Users = Models.User;
+
+mongoose.connect('mongodb://localhost:27017/cf');
+
+//Import necessary modules
 const express = require('express'),
     app = express(),
+    // import morgan module for logging
     morgan = require('morgan'),
     // import built in node modules fs and path
     fs = require('fs'),  
     path = require('path'),
-    // import bodyParser and uuid modules
-    bodyParser = require('body-parser'),
+    // import uuid modules
+/*     bodyParser = require('body-parser'), */
     uuid = require('uuid');
 
-// use body parser middleware JSON parsing
-app.use(bodyParser.json());
+// use body parser middleware JSON parsing as built-in in express 4.16+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Movie data
 let movies = [
@@ -174,19 +186,38 @@ app.get('/', (req, res) => {
 });
 
 // CREATE new user
-app.post('/users', (req, res) => {
-    const newUser = req.body;
-
-    if (newUser.name) {
-        newUser.id = uuid.v4();
-        if (!newUser.favorites) {
-            newUser.favorites = [];
-        }
-        users.push(newUser);
-        res.status(201).json(newUser);
-    } else {
-        res.status(400).send('User name is required');
-    }
+/* We’ll expect JSON in this format
+{
+  ID: Integer,
+  username: String,
+  password: String,
+  email: String,
+  birthday: Date
+}*/
+app.post('/users', async (req, res) => {
+    await Users.findOne({ username: req.body.username })
+        .then((user) => {
+            if (user) {
+                return res.status(400).send(req.body.username + 'already exists');
+            } else {
+                Users
+                    .create({
+                        username: req.body.username,
+                        password: req.body.password,
+                        email: req.body.email,
+                        birthday: req.body.birthday
+                    })
+                    .then((user) => { res.status(201).json(user) })
+                    .catch((error) => {
+                        console.error(error);
+                        res.status(500).send('Error: ' + error);
+                    })
+            }
+        })
+        .catch((error) => {
+            console.error(error);
+            res.status(500).send('Error: ' + error);
+        });
 });
 
 // UPDATE existing user's name

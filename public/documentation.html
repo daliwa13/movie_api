@@ -29,10 +29,10 @@
             <li><a href="#api-endpoints">API Endpoints</a></li>
             <li><a href="#tech-stack">Tech Stack</a></li>
         </ul>
-        <h2>Installation</h2>
+        <h2 id="installation">Installation</h2>
         <p>In order to use the App you need to download the files from GitHub repository and install the necessary
             dependencies by running <code>npm install</code> in the project directory.</p>
-        <h2>Features</h2>
+        <h2 id="features">Features</h2>
         <ul>
             <li>Return a list of ALL movies to the user</li>
             <li>Return data (description, genre, director, image URL, whether it’s featured or not) about a
@@ -45,15 +45,15 @@
             <li>Allow users to remove a movie from their list of favorites</li>
             <li>Allow existing users to deregister</li>
         </ul>
-        <h2>API Endpoints</h2>
+        <h2 id="api-endpoints">API Endpoints</h2>
         <ul>
             <li><a href="#GET-movies">/movies</a></li>
             <li><a href="#GET-movies-title">/movies/[title]</a></li>
             <li><a href="#GET-genres-genreName">/movies/genre/[genreName]</a></li>
             <li><a href="#GET-directors-name">/movies/directors/[name]</a></li>
             <li><a href="#POST-users">/users</a></li>
-            <li><a href="#PUT-users-username">/users/[id]</a></li>
-            <li><a href="#PUT-users-favorites">/users/[id]/[title]</a></li>
+            <li><a href="#PUT-users-username">/users/[username]</a></li>
+            <li><a href="#POST-users-favorites">/users/[username]/movies/[movieID]</a></li>
         </ul>
         <h3>Overview table</h3>
         <table id="endpoint-table" class="table table-striped">
@@ -95,31 +95,37 @@
             <tr class="table-striped">
                 <td>/users</td>
                 <td>POST</td>
-                <td>Adds a new user to the system with the given name.</td>
+                <td>Registers a new user with username, password, email, and birthday.</td>
                 <td>JSON</td>
                 <td>JSON</td>
             </tr>
             <tr>
-                <td>/users/:id</td>
+                <td>/users/:username</td>
                 <td>PUT</td>
-                <td>Updates an existing user's name in the system with the given data based on user's ID.</td>
+                <td>Updates an existing user's profile (username, password, email, birthday) by username.</td>
                 <td>JSON</td>
                 <td>JSON</td>
             </tr>
             <tr class="table-striped">
-                <td>/users/:id/:movieTitle</td>
-                <td>PUT</td>
-                <td>Updates favorite movies of the user in the system with the given data based on user's ID.</td>
+                <td>/users/:username</td>
+                <td>DELETE</td>
+                <td>Deletes a user account by username.</td>
                 <td>None</td>
                 <td>String</td>
             </tr>
-            <tr>
-                <td>/users/:id/:movieTitle</td>
-                <td>DELETE</td>
-                <td>Removes a movie from favorite movies of the user in the system with the given data based on user's
-                    ID.</td>
+            <tr class="table-striped">
+                <td>/users/:username/movies/:movieID</td>
+                <td>POST</td>
+                <td>Adds a movie to a user's list of favorites by username and movie ID.</td>
                 <td>None</td>
-                <td>String</td>
+                <td>JSON</td>
+            </tr>
+            <tr>
+                <td>/users/:username/movies/:movieID</td>
+                <td>DELETE</td>
+                <td>Removes a movie from a user's list of favorites by username and movie ID.</td>
+                <td>None</td>
+                <td>JSON</td>
             </tr>
         </table>
         <div class="endpoint" id="GET-movies">
@@ -313,7 +319,7 @@
                 aria-expanded="false" aria-controls="POST-users-card">POST /users</button>
             <div class="collapse" id="POST-users-card">
                 <p><strong>Description:</strong><br>
-                    Adds a new user to the system with the given name.</p>
+                    Registers a new user.</p>
 
                 <p><strong>HTTP Method:</strong> <code>POST</code></p>
 
@@ -325,61 +331,73 @@
                 <p><strong>Example Request:</strong></p>
                 <pre class="endpoint-request"><code>
                 {
-                    "name": 'Kate'      
+                    "username": "kate",
+                    "password": "password123",
+                    "email": "kate@example.com",
+                    "birthday": "1985-07-21"
                 }</code></pre>
 
                 <p><strong>Success Response:</strong></p>
                 <ul>
-                    <li><strong>Status Code:</strong> <code>200 OK</code></li>
-                    <li><strong>Content-Type:</strong> <code>JSON</code></li>
+                    <li><strong>Status Code:</strong> <code>201 Created</code></li>
+                    <li><strong>Content-Type:</strong> <code>application/json</code></li>
                 </ul>
 
                 <p><strong>Example Response:</strong></p>
                 <pre class="endpoint-response"><code>
                 {
-                    "name": 'Kate',
-                    "id": 3,
-                    "favorites": []       
+                    "_id": "60f1c2...",
+                    "username": "kate",
+                    "password": "password123",
+                    "email": "kate@example.com",
+                    "birthday": "1985-07-21T00:00:00.000Z",
+                    "favoriteMovies": []      
                 }</code></pre>
 
                 <p><strong>Error Responses:</strong></p>
                 <ul>
-                    <li><code>400 Bad Request</code> – User name is required</li>
+                    <li><code>400 Bad Request</code> – Username already exists or required fields missing</li>
                 </ul>
             </div>
         </div>
         <div class="endpoint" id="PUT-users-username">
             <button class="btn btn-secondary" type="button" data-toggle="collapse" data-target="#PUT-users-username-card"
-                aria-expanded="false" aria-controls="PUT-users-username-card">PUT /users/:id</button>
+                aria-expanded="false" aria-controls="PUT-users-username-card">PUT /users/:username</button>
             <div class="collapse" id="PUT-users-username-card">
                 <p><strong>Description:</strong><br>
-                    Updates an existing user's name in the system with the given data based on user's ID.</p>
+                    Updates an existing user's profile using their current username.</p>
 
                 <p><strong>HTTP Method:</strong> <code>PUT</code></p>
 
-                <p><strong>URL:</strong> <code>http://localhost:8080/users/:id</code></p>
+                <p><strong>URL:</strong> <code>http://localhost:8080/users/:username</code></p>
 
-                <p><strong>Path Parameters:</strong> <code>id</code> (User ID)</p>
+                <p><strong>Path Parameters:</strong> <code>username</code> (current username)</p>
 
                 <p><strong>Request Body:</strong> application/json</p>
                 <p><strong>Example Request:</strong></p>
                 <pre class="endpoint-request"><code>
                 {
-                    "name": 'John'      
+                    "username": "johnny",
+                    "password": "newPassword!",
+                    "email": "johnny@example.com",
+                    "birthday": "1990-11-02"
                 }</code></pre>
 
                 <p><strong>Success Response:</strong></p>
                 <ul>
                     <li><strong>Status Code:</strong> <code>200 OK</code></li>
-                    <li><strong>Content-Type:</strong> <code>JSON</code></li>
+                    <li><strong>Content-Type:</strong> <code>application/json</code></li>
                 </ul>
 
                 <p><strong>Example Response:</strong></p>
                 <pre class="endpoint-response"><code>
                 {
-                    "name": 'John',
-                    "id": 1,
-                    "favorites": []       
+                    "_id": "60f1c2...",
+                    "username": "johnny",
+                    "password": "newPassword!",
+                    "email": "johnny@example.com",
+                    "birthday": "1990-11-02T00:00:00.000Z",
+                    "favoriteMovies": []      
                 }</code></pre>
 
                 <p><strong>Error Responses:</strong></p>
@@ -388,19 +406,49 @@
                 </ul>
             </div>
         </div>
-        <div class="endpoint" id="PUT-users-favorites">
-            <button class="btn btn-secondary" type="button" data-toggle="collapse" data-target="#PUT-users-favorites-card"
-                aria-expanded="false" aria-controls="PUT-users-favorites-card">PUT /users/:id/:movieTitle</button>
-            <div class="collapse" id="PUT-users-favorites-card">
+        <div class="endpoint" id="DELETE-users-username">
+            <button class="btn btn-secondary" type="button" data-toggle="collapse" data-target="#DELETE-users-username-card"
+                aria-expanded="false" aria-controls="DELETE-users-username-card">DELETE /users/:username</button>
+            <div class="collapse" id="DELETE-users-username-card">
                 <p><strong>Description:</strong><br>
-                    Updates favorite movies of the user in the system with the given data based on user's ID.</p>
+                    Deletes a user account by username.</p>
 
-                <p><strong>HTTP Method:</strong> <code>PUT</code></p>
+                <p><strong>HTTP Method:</strong> <code>DELETE</code></p>
 
-                <p><strong>URL:</strong> <code>http://localhost:8080/users/:id/:movieTitle</code></p>
+                <p><strong>URL:</strong> <code>http://localhost:8080/users/:username</code></p>
+
+                <p><strong>Path Parameters:</strong> <code>username</code> (User username)</p>
+
+                <p><strong>Request Body:</strong> None</p>
+
+                <p><strong>Success Response:</strong></p>
+                <ul>
+                    <li><strong>Status Code:</strong> <code>200 OK</code></li>
+                    <li><strong>Content-Type:</strong> <code>text/plain</code></li>
+                </ul>
+
+                <p><strong>Example Response:</strong></p>
+                <pre class="endpoint-response">kate was deleted.</pre>
+
+                <p><strong>Error Responses:</strong></p>
+                <ul>
+                    <li><code>400 Bad Request</code> – User not found</li>
+                </ul>
+            </div>
+        </div>
+        <div class="endpoint" id="POST-users-favorites">
+            <button class="btn btn-secondary" type="button" data-toggle="collapse" data-target="#POST-users-favorites-card"
+                aria-expanded="false" aria-controls="POST-users-favorites-card">POST /users/:username/movies/:movieID</button>
+            <div class="collapse" id="POST-users-favorites-card">
+                <p><strong>Description:</strong><br>
+                    Adds a movie to a user's list of favorites using username and movie ID.</p>
+
+                <p><strong>HTTP Method:</strong> <code>POST</code></p>
+
+                <p><strong>URL:</strong> <code>http://localhost:8080/users/:username/movies/:movieID</code></p>
 
                 <p><strong>Path Parameters:</strong>
-                    <code>id</code> (User ID), <code>movieTitle</code> (Movie Title)
+                    <code>username</code> (User username), <code>movieID</code> (Movie ID)
                 </p>
 
                 <p><strong>Request Body:</strong> None</p>
@@ -408,31 +456,37 @@
                 <p><strong>Success Response:</strong></p>
                 <ul>
                     <li><strong>Status Code:</strong> <code>200 OK</code></li>
-                    <li><strong>Content-Type:</strong> <code>String</code></li>
+                    <li><strong>Content-Type:</strong> <code>application/json</code></li>
                 </ul>
 
                 <p><strong>Example Response:</strong></p>
-                <pre class="endpoint-response">Favorite movies for user 2 updated successfully by adding Pulp Fiction</pre>
+                <pre class="endpoint-response"><code>
+                {
+                    "_id": "60f1c2...",
+                    "username": "kate",
+                    "favoriteMovies": ["64a1b9..."]
+                }
+                </code></pre>
 
                 <p><strong>Error Responses:</strong></p>
                 <ul>
-                    <li><code>400 Bad Request</code> – User not found</li>
+                    <li><code>500 Internal Server Error</code> – Failed to update favorites</li>
                 </ul>
             </div>
         </div>
         <div class="endpoint" id="DELETE-users-favorites">
             <button class="btn btn-secondary" type="button" data-toggle="collapse" data-target="#DELETE-users-favorites-card"
-                aria-expanded="false" aria-controls="DELETE-users-favorites-card">DELETE /users/:id/:movieTitle</button>
+                aria-expanded="false" aria-controls="DELETE-users-favorites-card">DELETE /users/:username/movies/:movieID</button>
             <div class="collapse" id="DELETE-users-favorites-card">
                 <p><strong>Description:</strong><br>
-                    Updates favorite movies of the user in the system with the given data based on user's ID.</p>
+                    Removes a movie from a user's list of favorites using username and movie ID.</p>
 
                 <p><strong>HTTP Method:</strong> <code>DELETE</code></p>
 
-                <p><strong>URL:</strong> <code>http://localhost:8080/users/:id/:movieTitle</code></p>
+                <p><strong>URL:</strong> <code>http://localhost:8080/users/:username/movies/:movieID</code></p>
 
                 <p><strong>Path Parameters:</strong>
-                    <code>id</code> (User ID), <code>movieTitle</code> (Movie Title)
+                    <code>username</code> (User username), <code>movieID</code> (Movie ID)
                 </p>
 
                 <p><strong>Request Body:</strong> None</p>
@@ -440,20 +494,25 @@
                 <p><strong>Success Response:</strong></p>
                 <ul>
                     <li><strong>Status Code:</strong> <code>200 OK</code></li>
-                    <li><strong>Content-Type:</strong> <code>String</code></li>
+                    <li><strong>Content-Type:</strong> <code>application/json</code></li>
                 </ul>
 
                 <p><strong>Example Response:</strong></p>
-                <pre
-                    class="endpoint-response">Favorite movies for user 2 updated successfully by removing Pulp Fiction</pre>
+                <pre class="endpoint-response"><code>
+                {
+                    "_id": "60f1c2...",
+                    "username": "kate",
+                    "favoriteMovies": []
+                }
+                </code></pre>
 
                 <p><strong>Error Responses:</strong></p>
                 <ul>
-                    <li><code>400 Bad Request</code> – User not found</li>
+                    <li><code>500 Internal Server Error</code> – Failed to update favorites</li>
                 </ul>
             </div>
         </div>
-        <h2>Tech Stack</h2>
+        <h2 id="tech-stack">Tech Stack</h2>
         <ul>
             <li>Node.js</li>
             <li>REST</li>

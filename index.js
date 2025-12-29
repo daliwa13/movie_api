@@ -23,154 +23,6 @@ const express = require('express'),
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Movie data
-let movies = [
-    {
-        "title": 'Rubber',
-        "director": {
-            "name": 'Quentin Dupieux',
-            "bio": 'Quentin Dupieux is a French filmmaker and electronic musician known for his surreal and absurdist style. He often incorporates elements of dark humor and unconventional storytelling in his works.',
-            "birthYear": 1974
-        },
-        "writer": 'Quentin Dupieux',
-        "year": 2010,
-        "Genre": 'Horror',
-        "imageUrl": 'https://m.media-amazon.com/images/M/MV5BMTgyMTU1Nzc4MV5BMl5BanBnXkFtZTcwNTIwMzYzNA@@._V1_.jpg',
-        "description": 'A homicidal car tire, discovering it has destructive psionic power, sets its sights on a desert town once a mysterious woman becomes its obsession.'
-    },
-    {
-        "title": 'The Lord of the Rings: The Return of the King',
-        "director": {
-            "name": 'Peter Jackson',
-            "bio": 'Peter Jackson is a New Zealand film director, producer, and screenwriter. He is best known for directing the epic fantasy film trilogy "The Lord of the Rings" and "The Hobbit".',
-            "birthYear": 1961
-        },
-        "writer": 'Fran Walsh, Philippa Boyens, Peter Jackson',
-        "year": 2003,
-        "Genre": 'Fantasy',
-        "imageUrl": 'view-source:https://m.media-amazon.com/images/M/MV5BMTZkMjBjNWMtZGI5OC00MGU0LTk4ZTItODg2NWM3NTVmNWQ4XkEyXkFqcGc@._V1_.jpg',
-        "description": 'Gandalf and Aragorn lead the World of Men against Sauron\'s army to draw his gaze from Frodo and Sam as they approach Mount Doom with the One Ring.'
-    },
-    {
-        "title": 'Forrest Gump',
-        "director": {
-            "name": 'Robert Zemeckis',
-            "bio": 'Robert Zemeckis is an American film director, producer, and screenwriter known for his innovative use of visual effects and storytelling techniques.',
-            "birthYear": 1951
-        },
-        "writer": 'Eric Roth',
-        "year": 1994,
-        "Genre": 'Drama',
-        "imageUrl": 'view-source:https://m.media-amazon.com/images/M/MV5BM2JmYjc5MWEtNjY1MS00NGQwLTlhMWEtMGM1YjkxODllMmYyXkEyXkFqcGc@._V1_.jpg',
-        "description": 'The presidencies of Kennedy and Johnson, the Vietnam War, the Watergate scandal and other historical events unfold from the perspective of an Alabama man with an IQ of 75, whose only desire is to be reunited with his childhood sweetheart.'
-    },
-    {
-        "title": 'Fight Club',
-        "director": {
-            "name": 'David Fincher',
-            "bio": 'David Fincher is an American film director known for his dark and stylish films, often exploring themes of psychological thriller and crime.',
-            "birthYear": 1962
-        },
-        "writer": 'Chuck Palahniuk (novel), Jim Uhls (screenplay)',
-        "year": 1999,
-        "Genre": 'Drama',
-        "imageUrl": 'https://m.media-amazon.com/images/M/MV5BOTgyOGQ1NDItNGU3Ny00MjU3LTg2YWEtNmEyYjBiMjI1Y2M5XkEyXkFqcGc@._V1_.jpg',
-        "description": 'An insomniac office worker and a devil-may-care soap maker form an underground fight club that evolves into something much, much more.'
-    },
-    {
-        "title": 'Inception',
-        "director": {
-            "name": 'Christopher Nolan',
-            "bio": 'Christopher Nolan is a British-American film director, producer, and screenwriter known for his complex storytelling and innovative filmmaking techniques.',
-            "birthYear": 1970
-        },
-        "writer": 'Christopher Nolan',
-        "year": 2010,
-        "Genre": 'Action',
-        "imageUrl": 'https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_.jpg',
-        "description": 'A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O., but his tragic past may doom the project and his team to disaster.'
-    },
-    {
-        "title": 'The Silence of the Lambs',
-        "director": {
-            "name": 'Jonathan Demme',
-            "bio": 'Jonathan Demme was an American director, producer, and screenwriter known for his work in various genres, including thriller and drama.',
-            "birthYear": 1944
-        },
-        "writer": 'Thomas Harris (novel), Ted Tally (screenplay)',
-        "year": 1991,
-        "Genre": 'Thriller',
-        "imageUrl": 'https://m.media-amazon.com/images/M/MV5BNDdhOGJhYzctYzYwZC00YmI2LWI0MjctYjg4ODdlMDExYjBlXkEyXkFqcGc@._V1_.jpg',
-        "description": 'A young F.B.I. cadet must receive the help of an incarcerated and manipulative cannibal killer to help catch another serial killer, a madman who skins his victims.'
-    },
-    {
-        "title": 'Joker',
-        "director": {
-            "name": 'Todd Phillips',
-            "bio": 'Todd Phillips is an American film director, producer, and screenwriter known for his work on comedy and drama films, including the critically acclaimed "Joker".',
-            "birthYear": 1970
-        },
-        "writer": 'Todd Phillips, Scott Silver, Bob Kane',
-        "year": 2019,
-        "Genre": 'Crime',
-        "imageUrl": 'https://m.media-amazon.com/images/M/MV5BNzY3OWQ5NDktNWQ2OC00ZjdlLThkMmItMDhhNDk3NTFiZGU4XkEyXkFqcGc@._V1_.jpg',
-        "description": 'Arthur Fleck, a party clown and a failed stand-up comedian, leads an impoverished life with his ailing mother. However, when society shuns him and brands him as a freak, he decides to embrace the life of chaos in Gotham City.'
-    },
-    {
-        "title": 'Intouchables',
-        "director": {
-            "name": 'Olivier Nakache',
-            "bio": 'Olivier Nakache is a French film director and screenwriter known for his work on the critically acclaimed film "Intouchables".',
-            "birthYear": 1970
-        },
-        "writer": 'Olivier Nakache, Éric Toledano, Philippe Pozzo di Borgo',
-        "year": 2011,
-        "Genre": 'Biography',
-        "imageUrl": 'https://m.media-amazon.com/images/M/MV5BMTYxNDA3MDQwNl5BMl5BanBnXkFtZTcwNTU4Mzc1Nw@@._V1_.jpg',
-        "description": 'After he becomes a quadriplegic from a paragliding accident, an aristocrat hires a young man from the projects to be his caregiver.'
-    },
-    {
-        "title": 'Django Unchained',
-        "director": {
-            "name": 'Quentin Tarantino',
-            "bio": 'Quentin Tarantino is an American film director, screenwriter, producer, and actor known for his stylized films and sharp dialogue.',
-            "birthYear": 1963
-        },
-        "writer": 'Quentin Tarantino',
-        "year": 2012,
-        "Genre": 'Western',
-        "imageUrl": 'view-source:https://m.media-amazon.com/images/M/MV5BMjIyNTQ5NjQ1OV5BMl5BanBnXkFtZTcwODg1MDU4OA@@._V1_.jpg',
-        "description": 'With the help of a German bounty hunter, a freed slave sets out to rescue his wife from a brutal Mississippi plantation owner.'
-    },
-    {
-        "title": 'Pulp Fiction',
-        "director": {
-            "name": 'Quentin Tarantino',
-            "bio": 'Quentin Tarantino is an American film director, screenwriter, producer, and actor known for his stylized films and sharp dialogue.',
-            "birthYear": 1963
-        },
-        "writer": 'Quentin Tarantino, Roger Avary',
-        "year": 1994,
-        "Genre": 'Drama',
-        "imageUrl": 'view-source:https://m.media-amazon.com/images/M/MV5BYTViYTE3ZGQtNDBlMC00ZTAyLTkyODMtZGRiZDg0MjA2YThkXkEyXkFqcGc@._V1_.jpg',
-        "description": 'The lives of two mob hitmen, a boxer, a gangster\'s wife, and a pair of diner bandits intertwine in four tales of violence and redemption.'
-    }
-];
-
-// User data
-let users = [
-    {
-        id: 1,
-        name: "Alice",
-        favorites: ["Inception", "The Lord of the Rings: The Return of the King"]
-    },
-    {
-        id: 2,
-        name: "Bob",
-        favorites: ["Forrest Gump", "Fight Club"]
-    },
-];
-
 // Access ‘log.txt’ file in root directory
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'log.txt'), { flags: 'a' });
 
@@ -185,6 +37,7 @@ app.get('/', (req, res) => {
     res.send('Navigate to /documentation for API documentation.<br>Navigate to /movies to see the list of top movies.');
 });
 
+// Users endpoints
 // CREATE new user
 /* We’ll expect JSON in this format
 {
@@ -198,7 +51,7 @@ app.post('/users', async (req, res) => {
     await Users.findOne({ username: req.body.username })
         .then((user) => {
             if (user) {
-                return res.status(400).send(req.body.username + 'already exists');
+                return res.status(400).send(req.body.username + ' already exists');
             } else {
                 Users
                     .create({
@@ -220,108 +73,182 @@ app.post('/users', async (req, res) => {
         });
 });
 
-// UPDATE existing user's name
-app.put('/users/:id', (req, res) => {
-    const { id } = req.params;
-    const updatedUser = req.body;
-
-    let user = users.find( user => user.id == id);
-
-    if (user) {
-        user.name = updatedUser.name;
-        res.status(200).json(user);
-    } else {
-        res.status(404).send('User not found');
-    }
-
+// READ all users - not accessible to general public, therefore no link in documentation
+app.get('/users', async (req, res) => {
+    await Users.find()
+        .then((users) => {
+            res.status(201).json(users);
+        })
+        .catch((error) => {
+            console.error(error);
+            res.status(500).send('Error: ' + error);
+        });
 });
 
-// UPDATE user's favorite movies
-app.put('/users/:id/:movieTitle', (req, res) => {
-    const { id, movieTitle } = req.params;
-
-    let user = users.find(user => user.id == id);
-
-    if (user) {
-        user.favorites.push(movieTitle);
-        res.status(200).send(`Favorite movies for user ${id} updated successfully by adding ${movieTitle}`);
-    } else {
-        res.status(404).send('User not found');
-    }
+// READ user by username
+app.get('/users/:username', async (req, res) => {
+    await Users.findOne({ username: req.params.username })
+        .then((user) => {
+            if (!user) {
+                res.status(400).send('User not found');
+            } else {
+                res.json(user);
+            }
+        })
+        .catch((error) => {
+            console.error(error);
+            res.status(500).send('Error: ' + error);
+        });
 });
+
+// Update a user's info, by username
+/* We’ll expect JSON in this format
+{
+  username: String,
+  (required)
+  password: String,
+  email: String,
+  birthday: Date
+}*/
+app.put('/users/:username', async (req, res) => {
+    await Users.findOneAndUpdate( 
+        { username: req.params.username }, 
+        { $set: 
+            {
+                username: req.body.username,
+                password: req.body.password,
+                email: req.body.email,
+                birthday: req.body.birthday
+            }
+        },
+        { new: true }) // This line makes sure that the updated document is returned
+    .then((updatedUser) => {
+        if (!updatedUser) {
+            res.status(400).send('User not found');
+        } else {
+            res.json(updatedUser);
+        }
+    })
+    .catch((error) => {
+        console.error(error);
+        res.status(500).send('Error: ' + error);
+    });
+});
+
+// Delete a user by username
+app.delete('/users/:Username', async (req, res) => {
+    await Users.findOneAndDelete({ username: req.params.Username })
+        .then((user) => {
+            if (!user) {
+                res.status(400).send(req.params.Username + ' was not found');
+            } else {
+                res.status(200).send(req.params.Username + ' was deleted.');
+            }
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        });
+});
+
+// Add a movie to a user's list of favorites
+app.post('/users/:username/movies/:movieID', async (req, res) => {
+    await Users.findOneAndUpdate(
+        { username: req.params.username },
+        { $push: { favoriteMovies: req.params.movieID } },
+        { new: true } // This line makes sure that the updated document is returned
+    )
+    .then((updatedUser) => {
+        res.json(updatedUser);
+    })
+    .catch((error) => {
+        console.error(error);
+        res.status(500).send('Error: ' + error);
+    });
+});
+
 
 // DELETE user's favorite movies
-app.delete('/users/:id/:movieTitle', (req, res) => {
-    const { id, movieTitle } = req.params;
-
-    let user = users.find(user => user.id == id);
-
-    if (user) {
-        user.favorites = user.favorites.filter( title => title !== movieTitle);
-        res.status(200).send(`Favorite movies for user ${id} updated successfully by removing ${movieTitle}`);
-    } else {
-        res.status(404).send('User not found');
-    }
+app.delete('/users/:username/movies/:movieID', async (req, res) => {
+    await Users.findOneAndUpdate(
+        { username: req.params.username },
+        { $pull: { favoriteMovies: req.params.movieID } },
+        { new: true } // This line makes sure that the updated document is returned
+    )
+        .then((updatedUser) => {
+            res.json(updatedUser);
+        })
+        .catch((error) => {
+            console.error(error);
+            res.status(500).send('Error: ' + error);
+        });
 });
 
-// DELETE user
-app.delete('/users/:id', (req, res) => {
-    const { id } = req.params;
-
-    let user = users.find(user => user.id == id);
-
-    if (user) {
-        users = users.filter( user => user.id != id);
-        res.status(200).send(`User ${id} deleted successfully`);
-    } else {
-        res.status(404).send('User not found');
-    }
+// Movies endpoints
+// READ all movies
+app.get('/movies', async (req, res) => {
+    await Movies.find()
+        .then((movies) => {
+            res.status(201).json(movies);
+        })
+        .catch((error) => {
+            console.error(error);
+            res.status(500).send('Error: ' + error);
+        });
 });
 
-//READ all movies
-app.get('/movies', (req, res) => {
-    res.status(200).json(movies);
-});
 // READ movie by title
-app.get('/movies/:title', (req, res) => {
-    const { title } = req.params;
-    const movie = movies.find( (movie) => movie.title === title);
-
-        if (movie) {
-            res.status(200).json(movie);
-        } else {
-            res.status(400).send('Movie not found');
-        }
+app.get('/movies/:title', async (req, res) => {
+    await Movies.findOne({ title: req.params.title })
+        .then((movie) => {
+            if (!movie) {
+                res.status(400).send('Movie not found');
+            } else {
+                res.json(movie);
+            }
+        })
+        .catch((error) => {
+            console.error(error);
+            res.status(500).send('Error: ' + error);
+        });
 });
 
-// READ Genre by movie title
-app.get('/movies/genre/:genreName', (req, res) => {
-    const { genreName } = req.params;
-    const genre = movies.find( movie => movie.Genre == genreName).Genre;
-
-    if (genre) {
-        res.status(200).json(genre);
-    } else {
-        res.status(400).send('Genre not found');
-    }
+// READ Genre by it's name/title
+app.get('/movies/genre/:genreName', async (req, res) => {
+    await Movies.findOne({ "genre.name": req.params.genreName })
+        .then((movie) => {
+            if (!movie) {
+                res.status(400).send('Genre not found');
+            } else {
+                res.json(movie.genre);
+            }
+        })
+        .catch((error) => {
+            console.error(error);
+            res.status(500).send('Error: ' + error);
+        });
 });
 
-// READ Director by movie title
-app.get('/movies/directors/:directorName', (req, res) => {
-    const { directorName } = req.params;
-    const director = movies.find(movie => movie.director.name == directorName).director;
-
-    if (director) {
-        res.status(200).json(director);
-    } else {
-        res.status(400).send('Director not found');
-    }
+// READ Director by their name
+app.get('/movies/directors/:directorName', async (req, res) => {
+    await Movies.findOne({ "director.name": req.params.directorName })
+        .then((movie) => {
+            if (!movie) {
+                res.status(400).send('Director not found');
+            } else {
+                res.json(movie.director);
+            }
+        })
+        .catch((error) => {
+            console.error(error);
+            res.status(500).send('Error: ' + error);
+        });
 });
 
 // error handling
 app.use((err, req, res, next) => {
     console.error(err.stack);
-    res.status(500).send('Something broke!');
+    res.status(500).send('Something broke!!!');
 });
 
 // listen for requests

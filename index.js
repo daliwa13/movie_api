@@ -16,7 +16,6 @@ const express = require('express'),
     fs = require('fs'),  
     path = require('path'),
     // import uuid modules
-/*     bodyParser = require('body-parser'), */
     uuid = require('uuid');
 
 // use body parser middleware JSON parsing as built-in in express 4.16+
@@ -24,7 +23,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // import auth.js file
-let auth = require('./auth.js')(app);
+require('./auth.js')(app);
 
 // import passport module
 const passport = require('passport');

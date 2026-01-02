@@ -34,26 +34,28 @@
             dependencies by running <code>npm install</code> in the project directory.</p>
         <h2 id="features">Features</h2>
         <ul>
+            <li>Allow new users to register</li>
+            <li>Allow users to login and obtain a JWT token</li>
+            <li>Allow users to update their user info (username, password, email, date of birth)</li>
+            <li>Allow users to add a movie to their list of favorites</li>
+            <li>Allow users to remove a movie from their list of favorites</li>
+            <li>Allow existing users to deregister</li>
             <li>Return a list of ALL movies to the user</li>
             <li>Return data (description, genre, director, image URL, whether it’s featured or not) about a
                 single movie by title to the user</li>
             <li>Return data about a genre (description) by name/title (e.g., “Thriller”)</li>
             <li>Return data about a director (bio, birth year, death year) by name</li>
-            <li>Allow new users to register</li>
-            <li>Allow users to update their user info (username, password, email, date of birth)</li>
-            <li>Allow users to add a movie to their list of favorites</li>
-            <li>Allow users to remove a movie from their list of favorites</li>
-            <li>Allow existing users to deregister</li>
         </ul>
         <h2 id="api-endpoints">API Endpoints</h2>
         <ul>
+            <li><a href="#login">/login</a></li>
+            <li><a href="#POST-users">/users</a></li>
+            <li><a href="#PUT-users-username">/users/[username]</a></li>
+            <li><a href="#POST-users-favorites">/users/[username]/movies/[movieID]</a></li>
             <li><a href="#GET-movies">/movies</a></li>
             <li><a href="#GET-movies-title">/movies/[title]</a></li>
             <li><a href="#GET-genres-genreName">/movies/genre/[genreName]</a></li>
             <li><a href="#GET-directors-name">/movies/directors/[name]</a></li>
-            <li><a href="#POST-users">/users</a></li>
-            <li><a href="#PUT-users-username">/users/[username]</a></li>
-            <li><a href="#POST-users-favorites">/users/[username]/movies/[movieID]</a></li>
         </ul>
         <h3>Overview table</h3>
         <table id="endpoint-table" class="table table-striped">
@@ -64,31 +66,10 @@
                 <th scope="col">Request body data format</th>
                 <th scope="col">Response body data format</th>
             </tr>
-            <tr class="table-striped">
-                <td>/movies</td>
-                <td>GET</td>
-                <td>Returns a list of all movies.</td>
-                <td>None</td>
-                <td>JSON</td>
-            </tr>
             <tr>
-                <td>/movies/:title</td>
-                <td>GET</td>
-                <td>Returns a single movie matching the provided title.</td>
-                <td>None</td>
-                <td>JSON</td>
-            </tr>
-            <tr class="table-striped">
-                <td>/movies/genre/:genreName</td>
-                <td>GET</td>
-                <td>Returns a single genre matching the provided genre name.</td>
-                <td>None</td>
-                <td>JSON</td>
-            </tr>
-            <tr>
-                <td>/movies/directors/:directorName</td>
-                <td>GET</td>
-                <td>Returns information about a director matching the provided director name.</td>
+                <td>/login</td>
+                <td>POST</td>
+                <td>Login registered user to obtain a JWT token.</td>
                 <td>None</td>
                 <td>JSON</td>
             </tr>
@@ -127,19 +108,50 @@
                 <td>None</td>
                 <td>JSON</td>
             </tr>
+            <tr class="table-striped">
+                <td>/movies</td>
+                <td>GET</td>
+                <td>Returns a list of all movies.</td>
+                <td>None</td>
+                <td>JSON</td>
+            </tr>
+            <tr>
+                <td>/movies/:title</td>
+                <td>GET</td>
+                <td>Returns a single movie matching the provided title.</td>
+                <td>None</td>
+                <td>JSON</td>
+            </tr>
+            <tr class="table-striped">
+                <td>/movies/genre/:genreName</td>
+                <td>GET</td>
+                <td>Returns a single genre matching the provided genre name.</td>
+                <td>None</td>
+                <td>JSON</td>
+            </tr>
+            <tr>
+                <td>/movies/directors/:directorName</td>
+                <td>GET</td>
+                <td>Returns information about a director matching the provided director name.</td>
+                <td>None</td>
+                <td>JSON</td>
+            </tr>
         </table>
-        <div class="endpoint" id="GET-movies">
-            <button class="btn btn-secondary" type="button" data-toggle="collapse" data-target="#GET-movies-card"
-                aria-expanded="false" aria-controls="GET-movies-card">GET /movies</button>
-            <div class="collapse" id="GET-movies-card">
+        <div class="endpoint" id="login">
+            <button class="btn btn-secondary" type="button" data-toggle="collapse" data-target="#login-card"
+                aria-expanded="false" aria-controls="login-card">POST /login</button>
+            <div class="collapse" id="login-card">
                 <p><strong>Description:</strong>
-                    Returns a list of all movies.</p>
+                    Allows <strong>registered</strong> user to login and obtain a JWT token.
+                </p>
 
-                <p><strong>HTTP Method:</strong> <code>GET</code></p>
+                <p><strong>JWT Token:</strong> Not required</p>
 
-                <p><strong>URL:</strong> <code>http://localhost:8080/movies</code></p>
+                <p><strong>HTTP Method:</strong> <code>POST</code></p>
 
-                <p><strong>Path Parameters:</strong> None</p>
+                <p><strong>URL:</strong> <code>http://localhost:8080/login</code></p>
+
+                <p><strong>Path Parameters:</strong><code>username</code> (User's username)</p>
 
                 <p><strong>Request Body:</strong> None</p>
 
@@ -151,166 +163,32 @@
 
                 <p><strong>Example Response:</strong></p>
                 <pre class="endpoint-response"><code>
-            [
-                {
-                    "title": 'Rubber',
-                    "director": {
-                        "name": 'Quentin Dupieux',
-                        "bio": 'Quentin Dupieux is a French filmmaker and electronic musician known for his surreal and absurdist style. He
-                        often incorporates elements of dark humor and unconventional storytelling in his works.',
-                        "birthYear": 1974
+                    {
+                    
+                    "user": {
+                    
+                        "_id": "6954e79789464f933f8561a5",
+                        
+                        "username": "testuser2",
+                        
+                        "password": "qwerty123",
+                        
+                        "email": "testuser2@example.com",
+                        
+                        "favoriteMovies": [],
+                        
+                        "__v": 0
+                    
                     },
-                    "writer": 'Quentin Dupieux',
-                    "year": 2010,
-                    "Genre": 'Horror',
-                    "imageUrl": 'https://m.media-amazon.com/images/M/MV5BMTgyMTU1Nzc4MV5BMl5BanBnXkFtZTcwNTIwMzYzNA@@._V1_.jpg',
-                    "description": 'A homicidal car tire, discovering it has destructive psionic power, sets its sights on a desert town
-                    once a mysterious woman becomes its obsession.'
-                },
-                {
-                    "title": 'The Lord of the Rings: The Return of the King',
-                    "director": {
-                        "name": 'Peter Jackson',
-                        "bio": 'Peter Jackson is a New Zealand film director, producer, and screenwriter. He is best known for directing the
-                        epic fantasy film trilogy "The Lord of the Rings" and "The Hobbit".',
-                        "birthYear": 1961
-                    },
-                    "writer": 'Fran Walsh, Philippa Boyens, Peter Jackson',
-                    "year": 2003,
-                    "Genre": 'Fantasy',
-                    "imageUrl":
-                    'view-source:https://m.media-amazon.com/images/M/MV5BMTZkMjBjNWMtZGI5OC00MGU0LTk4ZTItODg2NWM3NTVmNWQ4XkEyXkFqcGc@._V1_.jpg',
-                    "description": 'Gandalf and Aragorn lead the World of Men against Sauron\'s army to draw his gaze from Frodo and Sam as
-                    they approach Mount Doom with the One Ring.'           
-                }
-            ]</code></pre>
+                    
+                    "token":
+                    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OTU0ZTc5Nzg5NDY0ZjkzM2Y4NTYxYTUiLCJ1c2VybmFtZSI6InRlc3R1c2VyMiIsInBhc3N3b3JkIjoicXdlcnR5MTIzIiwiZW1haWwiOiJ0ZXN0dXNlcjJAZXhhbXBsZS5jb20iLCJmYXZvcml0ZU1vdmllcyI6W10sIl9fdiI6MCwiaWF0IjoxNzY3MTcyMDA5LCJleHAiOjE3Njc3NzY4MDksInN1YiI6InRlc3R1c2VyMiJ9.HkS6kuNtfVhaiBIaJJe9xB4Yg8JF8GdQSib5w0PMUlI"                       
+                
+                    }</code></pre>
 
                 <p><strong>Error Responses:</strong></p>
                 <ul>
-                    <li><code>500 Internal Server Error</code> – Server failed to retrieve movies</li>
-                </ul>
-            </div>
-        </div>
-        <div class="endpoint" id="GET-movies-title">
-            <button class="btn btn-secondary" type="button" data-toggle="collapse" data-target="#GET-movies-title-card"
-                aria-expanded="false" aria-controls="GET-movies-title-card">GET /movies/:title</button>
-            <div class="collapse" id="GET-movies-title-card">
-                <p><strong>Description:</strong><br>
-                    Returns a single movie matching the provided title.</p>
-
-                <p><strong>HTTP Method:</strong> <code>GET</code></p>
-
-                <p><strong>URL:</strong> <code>http://localhost:8080/movies/:title</code></p>
-
-                <p><strong>Path Parameters:</strong></p>
-                <ul>
-                    <li><code>title</code> (string) – The exact title of the movie</li>
-                </ul>
-
-                <p><strong>Request Body:</strong> None</p>
-
-                <p><strong>Success Response:</strong></p>
-                <ul>
-                    <li><strong>Status Code:</strong> <code>200 OK</code></li>
-                    <li><strong>Content-Type:</strong> <code>application/json</code></li>
-                </ul>
-
-                <p><strong>Example Response:</strong></p>
-                <pre class="endpoint-response"><code>
-            {
-                "title": 'Fight Club',
-                "director": {
-                    "name": 'David Fincher',
-                    "bio": 'David Fincher is an American film director known for his dark and stylish films, often exploring themes of psychological thriller and crime.',
-                    "birthYear": 1962
-                },
-                "writer": 'Chuck Palahniuk (novel), Jim Uhls (screenplay)',
-                "year": 1999,
-                "Genre": 'Drama',
-                "imageUrl":
-                'https://m.media-amazon.com/images/M/MV5BOTgyOGQ1NDItNGU3Ny00MjU3LTg2YWEtNmEyYjBiMjI1Y2M5XkEyXkFqcGc@._V1_.jpg',
-                "description": 'An insomniac office worker and a devil-may-care soap maker form an underground fight club that evolves
-                into something much, much more.'          
-            },</code></pre>
-
-                <p><strong>Error Responses:</strong></p>
-                <ul>
-                    <li><code>400 Bad Request</code> – Movie not found</li>
-                </ul>
-            </div>
-        </div>
-        <div class="endpoint" id="GET-genres-genreName">
-            <button class="btn btn-secondary" type="button" data-toggle="collapse" data-target="#GET-movies-genreName-card"
-                aria-expanded="false" aria-controls="GET-movies-genreName-card">GET /movies/genre/:genreName</button>
-            <div class="collapse" id="GET-movies-genreName-card">
-                <p><strong>Description:</strong><br>
-                    Returns a single genre matching the provided genre name.</p>
-
-                <p><strong>HTTP Method:</strong> <code>GET</code></p>
-
-                <p><strong>URL:</strong> <code>http://localhost:8080/movies/genre/:genreName</code></p>
-
-                <p><strong>Path Parameters:</strong></p>
-                <ul>
-                    <li><code>genreName</code> (string) – The exact name of the genre</li>
-                </ul>
-
-                <p><strong>Request Body:</strong> None</p>
-
-                <p><strong>Success Response:</strong></p>
-                <ul>
-                    <li><strong>Status Code:</strong> <code>200 OK</code></li>
-                    <li><strong>Content-Type:</strong> <code>application/json</code></li>
-                </ul>
-
-                <p><strong>Example Response:</strong></p>
-                <pre class="endpoint-response"><code>
-                {
-                    "Genre": 'Horror'
-                },</code></pre>
-
-                <p><strong>Error Responses:</strong></p>
-                <ul>
-                    <li><code>400 Bad Request</code> – Genre not found</li>
-                </ul>
-            </div>
-        </div>
-        <div class="endpoint" id="GET-directors-name">
-            <button class="btn btn-secondary" type="button" data-toggle="collapse" data-target="#GET-movies-directors-card"
-                aria-expanded="false" aria-controls="GET-movies-directors-card">GET /movies/directors/:directorName</button>
-            <div class="collapse" id="GET-movies-directors-card">
-                <p><strong>Description:</strong><br>
-                    Returns information about a director matching the provided director name.</p>
-
-                <p><strong>HTTP Method:</strong> <code>GET</code></p>
-
-                <p><strong>URL:</strong> <code>http://localhost:8080/movies/directors/:directorName</code></p>
-
-                <p><strong>Path Parameters:</strong></p>
-                <ul>
-                    <li><code>directorName</code> (string) – The exact name of the director</li>
-                </ul>
-
-                <p><strong>Request Body:</strong> None</p>
-
-                <p><strong>Success Response:</strong></p>
-                <ul>
-                    <li><strong>Status Code:</strong> <code>200 OK</code></li>
-                    <li><strong>Content-Type:</strong> <code>application/json</code></li>
-                </ul>
-
-                <p><strong>Example Response:</strong></p>
-                <pre class="endpoint-response"><code>
-                {
-                    "name": 'Quentin Dupieux',
-                    "bio": 'Quentin Dupieux is a French filmmaker and electronic musician known for his surreal and absurdist style. He
-                    often incorporates elements of dark humor and unconventional storytelling in his works.',
-                    "birthYear": 1974       
-                }</code></pre>
-
-                <p><strong>Error Responses:</strong></p>
-                <ul>
-                    <li><code>400 Bad Request</code> – Director not found</li>
+                    <li><code>400 Something is not right</code> – Received error or user not existing in database</li>
                 </ul>
             </div>
         </div>
@@ -319,7 +197,10 @@
                 aria-expanded="false" aria-controls="POST-users-card">POST /users</button>
             <div class="collapse" id="POST-users-card">
                 <p><strong>Description:</strong><br>
-                    Registers a new user.</p>
+                    Registers a new user.
+                </p>
+
+                <p><strong>JWT Token:</strong> Not required</p>
 
                 <p><strong>HTTP Method:</strong> <code>POST</code></p>
 
@@ -365,7 +246,10 @@
                 aria-expanded="false" aria-controls="PUT-users-username-card">PUT /users/:username</button>
             <div class="collapse" id="PUT-users-username-card">
                 <p><strong>Description:</strong><br>
-                    Updates an existing user's profile using their current username.</p>
+                    Updates an existing user's profile using their current username.
+                </p>
+
+                <p><strong>JWT Token:</strong> Required</p>
 
                 <p><strong>HTTP Method:</strong> <code>PUT</code></p>
 
@@ -411,7 +295,10 @@
                 aria-expanded="false" aria-controls="DELETE-users-username-card">DELETE /users/:username</button>
             <div class="collapse" id="DELETE-users-username-card">
                 <p><strong>Description:</strong><br>
-                    Deletes a user account by username.</p>
+                    Deletes a user account by username.
+                </p>
+
+                <p><strong>JWT Token:</strong> Required</p>
 
                 <p><strong>HTTP Method:</strong> <code>DELETE</code></p>
 
@@ -441,7 +328,10 @@
                 aria-expanded="false" aria-controls="POST-users-favorites-card">POST /users/:username/movies/:movieID</button>
             <div class="collapse" id="POST-users-favorites-card">
                 <p><strong>Description:</strong><br>
-                    Adds a movie to a user's list of favorites using username and movie ID.</p>
+                    Adds a movie to a user's list of favorites using username and movie ID.
+                </p>
+
+                <p><strong>JWT Token:</strong> Required</p>
 
                 <p><strong>HTTP Method:</strong> <code>POST</code></p>
 
@@ -479,7 +369,10 @@
                 aria-expanded="false" aria-controls="DELETE-users-favorites-card">DELETE /users/:username/movies/:movieID</button>
             <div class="collapse" id="DELETE-users-favorites-card">
                 <p><strong>Description:</strong><br>
-                    Removes a movie from a user's list of favorites using username and movie ID.</p>
+                    Removes a movie from a user's list of favorites using username and movie ID.
+                </p>
+
+                <p><strong>JWT Token:</strong> Required</p>
 
                 <p><strong>HTTP Method:</strong> <code>DELETE</code></p>
 
@@ -509,6 +402,204 @@
                 <p><strong>Error Responses:</strong></p>
                 <ul>
                     <li><code>500 Internal Server Error</code> – Failed to update favorites</li>
+                </ul>
+            </div>
+        </div>
+        <div class="endpoint" id="GET-movies">
+            <button class="btn btn-secondary" type="button" data-toggle="collapse" data-target="#GET-movies-card"
+                aria-expanded="false" aria-controls="GET-movies-card">GET /movies</button>
+            <div class="collapse" id="GET-movies-card">
+                <p><strong>Description:</strong>
+                    Returns a list of all movies.
+                </p>
+
+                <p><strong>JWT Token:</strong> Required</p>
+        
+                <p><strong>HTTP Method:</strong> <code>GET</code></p>
+        
+                <p><strong>URL:</strong> <code>http://localhost:8080/movies</code></p>
+        
+                <p><strong>Path Parameters:</strong> None</p>
+        
+                <p><strong>Request Body:</strong> None</p>
+        
+                <p><strong>Success Response:</strong></p>
+                <ul>
+                    <li><strong>Status Code:</strong> <code>200 OK</code></li>
+                    <li><strong>Content-Type:</strong> <code>application/json</code></li>
+                </ul>
+        
+                <p><strong>Example Response:</strong></p>
+                <pre class="endpoint-response"><code>
+                    [
+                        {
+                            "title": 'Rubber',
+                            "director": {
+                                "name": 'Quentin Dupieux',
+                                "bio": 'Quentin Dupieux is a French filmmaker and electronic musician known for his surreal and absurdist style. He
+                                often incorporates elements of dark humor and unconventional storytelling in his works.',
+                                "birthYear": 1974
+                            },
+                            "writer": 'Quentin Dupieux',
+                            "year": 2010,
+                            "Genre": 'Horror',
+                            "imageUrl": 'https://m.media-amazon.com/images/M/MV5BMTgyMTU1Nzc4MV5BMl5BanBnXkFtZTcwNTIwMzYzNA@@._V1_.jpg',
+                            "description": 'A homicidal car tire, discovering it has destructive psionic power, sets its sights on a desert town
+                            once a mysterious woman becomes its obsession.'
+                        },
+                        {
+                            "title": 'The Lord of the Rings: The Return of the King',
+                            "director": {
+                                "name": 'Peter Jackson',
+                                "bio": 'Peter Jackson is a New Zealand film director, producer, and screenwriter. He is best known for directing the
+                                epic fantasy film trilogy "The Lord of the Rings" and "The Hobbit".',
+                                "birthYear": 1961
+                            },
+                            "writer": 'Fran Walsh, Philippa Boyens, Peter Jackson',
+                            "year": 2003,
+                            "Genre": 'Fantasy',
+                            "imageUrl":
+                            'view-source:https://m.media-amazon.com/images/M/MV5BMTZkMjBjNWMtZGI5OC00MGU0LTk4ZTItODg2NWM3NTVmNWQ4XkEyXkFqcGc@._V1_.jpg',
+                            "description": 'Gandalf and Aragorn lead the World of Men against Sauron\'s army to draw his gaze from Frodo and Sam as
+                            they approach Mount Doom with the One Ring.'           
+                        }
+                    ]</code></pre>
+        
+                <p><strong>Error Responses:</strong></p>
+                <ul>
+                    <li><code>500 Internal Server Error</code> – Server failed to retrieve movies</li>
+                </ul>
+            </div>
+        </div>
+        <div class="endpoint" id="GET-movies-title">
+            <button class="btn btn-secondary" type="button" data-toggle="collapse" data-target="#GET-movies-title-card"
+                aria-expanded="false" aria-controls="GET-movies-title-card">GET /movies/:title</button>
+            <div class="collapse" id="GET-movies-title-card">
+                <p><strong>Description:</strong><br>
+                    Returns a single movie matching the provided title.
+                </p>
+
+                <p><strong>JWT Token:</strong> Required</p>
+        
+                <p><strong>HTTP Method:</strong> <code>GET</code></p>
+        
+                <p><strong>URL:</strong> <code>http://localhost:8080/movies/:title</code></p>
+        
+                <p><strong>Path Parameters:</strong></p>
+                <ul>
+                    <li><code>title</code> (string) – The exact title of the movie</li>
+                </ul>
+        
+                <p><strong>Request Body:</strong> None</p>
+        
+                <p><strong>Success Response:</strong></p>
+                <ul>
+                    <li><strong>Status Code:</strong> <code>200 OK</code></li>
+                    <li><strong>Content-Type:</strong> <code>application/json</code></li>
+                </ul>
+        
+                <p><strong>Example Response:</strong></p>
+                <pre class="endpoint-response"><code>
+                    {
+                        "title": 'Fight Club',
+                        "director": {
+                            "name": 'David Fincher',
+                            "bio": 'David Fincher is an American film director known for his dark and stylish films, often exploring themes of psychological thriller and crime.',
+                            "birthYear": 1962
+                        },
+                        "writer": 'Chuck Palahniuk (novel), Jim Uhls (screenplay)',
+                        "year": 1999,
+                        "Genre": 'Drama',
+                        "imageUrl":
+                        'https://m.media-amazon.com/images/M/MV5BOTgyOGQ1NDItNGU3Ny00MjU3LTg2YWEtNmEyYjBiMjI1Y2M5XkEyXkFqcGc@._V1_.jpg',
+                        "description": 'An insomniac office worker and a devil-may-care soap maker form an underground fight club that evolves
+                        into something much, much more.'          
+                    },</code></pre>
+        
+                <p><strong>Error Responses:</strong></p>
+                <ul>
+                    <li><code>400 Bad Request</code> – Movie not found</li>
+                </ul>
+            </div>
+        </div>
+        <div class="endpoint" id="GET-genres-genreName">
+            <button class="btn btn-secondary" type="button" data-toggle="collapse" data-target="#GET-movies-genreName-card"
+                aria-expanded="false" aria-controls="GET-movies-genreName-card">GET /movies/genre/:genreName</button>
+            <div class="collapse" id="GET-movies-genreName-card">
+                <p><strong>Description:</strong><br>
+                    Returns a single genre matching the provided genre name.
+                </p>
+        
+                <p><strong>JWT Token:</strong> Required</p>
+
+                <p><strong>HTTP Method:</strong> <code>GET</code></p>
+        
+                <p><strong>URL:</strong> <code>http://localhost:8080/movies/genre/:genreName</code></p>
+        
+                <p><strong>Path Parameters:</strong></p>
+                <ul>
+                    <li><code>genreName</code> (string) – The exact name of the genre</li>
+                </ul>
+        
+                <p><strong>Request Body:</strong> None</p>
+        
+                <p><strong>Success Response:</strong></p>
+                <ul>
+                    <li><strong>Status Code:</strong> <code>200 OK</code></li>
+                    <li><strong>Content-Type:</strong> <code>application/json</code></li>
+                </ul>
+        
+                <p><strong>Example Response:</strong></p>
+                <pre class="endpoint-response"><code>
+                        {
+                            "Genre": 'Horror'
+                        },</code></pre>
+        
+                <p><strong>Error Responses:</strong></p>
+                <ul>
+                    <li><code>400 Bad Request</code> – Genre not found</li>
+                </ul>
+            </div>
+        </div>
+        <div class="endpoint" id="GET-directors-name">
+            <button class="btn btn-secondary" type="button" data-toggle="collapse" data-target="#GET-movies-directors-card"
+                aria-expanded="false" aria-controls="GET-movies-directors-card">GET /movies/directors/:directorName</button>
+            <div class="collapse" id="GET-movies-directors-card">
+                <p><strong>Description:</strong><br>
+                    Returns information about a director matching the provided director name.
+                </p>
+        
+                <p><strong>JWT Token:</strong> Required</p>
+
+                <p><strong>HTTP Method:</strong> <code>GET</code></p>
+        
+                <p><strong>URL:</strong> <code>http://localhost:8080/movies/directors/:directorName</code></p>
+        
+                <p><strong>Path Parameters:</strong></p>
+                <ul>
+                    <li><code>directorName</code> (string) – The exact name of the director</li>
+                </ul>
+        
+                <p><strong>Request Body:</strong> None</p>
+        
+                <p><strong>Success Response:</strong></p>
+                <ul>
+                    <li><strong>Status Code:</strong> <code>200 OK</code></li>
+                    <li><strong>Content-Type:</strong> <code>application/json</code></li>
+                </ul>
+        
+                <p><strong>Example Response:</strong></p>
+                <pre class="endpoint-response"><code>
+                        {
+                            "name": 'Quentin Dupieux',
+                            "bio": 'Quentin Dupieux is a French filmmaker and electronic musician known for his surreal and absurdist style. He
+                            often incorporates elements of dark humor and unconventional storytelling in his works.',
+                            "birthYear": 1974       
+                        }</code></pre>
+        
+                <p><strong>Error Responses:</strong></p>
+                <ul>
+                    <li><code>400 Bad Request</code> – Director not found</li>
                 </ul>
             </div>
         </div>

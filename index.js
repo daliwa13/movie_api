@@ -1,11 +1,13 @@
 // Set up mongoose connection to operate on MongoDB database
+let databaseUrl = 'mongodb://localhost:27017/cf';
+
 const mongoose = require('mongoose');
 const Models = require('./models.js');
 
 const Movies = Models.Movie;
 const Users = Models.User;
 
-mongoose.connect('mongodb://localhost:27017/cf');
+mongoose.connect(databaseUrl);
 
 //Import necessary modules
 const express = require('express'),
@@ -16,11 +18,30 @@ const express = require('express'),
     fs = require('fs'),  
     path = require('path'),
     // import uuid modules
-    uuid = require('uuid');
+    uuid = require('uuid'),
+    // import express validator module
+    { check, validationResult} = require('express-validator');
 
 // use body parser middleware JSON parsing as built-in in express 4.16+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// enable CORS using cors module
+const cors = require('cors');
+app.use(cors());
+
+let allowedOrigins = ['http://localhost:8080', 'http://testsite.com']; // Updated once deployment is done
+
+app.use(cors({
+    origin: (origin, callback) => {
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.indexOf(origin) === -1) { // If a specific origin isn’t found on the list of allowed origins
+            let message = 'The CORS policy for this application doesn’t allow access from origin ' + origin;
+            return callback(new Error(message), false);
+        }
+        return callback(null, true);
+    }
+}));
 
 // import auth.js file
 require('./auth.js')(app);
@@ -44,25 +65,39 @@ app.get('/', (req, res) => {
 });
 
 // Users endpoints
+
 // CREATE new user
 /* We’ll expect JSON in this format
 {
-  ID: Integer,
-  username: String,
-  password: String,
-  email: String,
+  username: String (required),
+  password: String (required),
+  email: String (required),
   birthday: Date
 }*/
-app.post('/users', async (req, res) => {
-    await Users.findOne({ username: req.body.username })
+app.post('/users',[
+    check('username', "Username is required and must be at least 5 characters long").isLength({min: 5}),
+    check('username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+    check('password', 'Password is required and must be at least 7 characters long').isLength({ min: 7 }),
+    check('email', 'Email does not appear to be valid').isEmail()
+], async (req, res) => {
+    // Validate the request body
+    let errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() });
+    }
+    
+    // Hash the password from input
+    let hashedPassword = Users.hashPassword(req.body.password);
+
+    await Users.findOne({ username: req.body.username }) // Check if user already exists
         .then((user) => {
             if (user) {
-                return res.status(400).send(req.body.username + ' already exists');
+                return res.status(400).send(req.body.username + ' already exists'); // Response if the user is already in the database
             } else {
                 Users
                     .create({
                         username: req.body.username,
-                        password: req.body.password,
+                        password: hashedPassword,
                         email: req.body.email,
                         birthday: req.body.birthday
                     })
@@ -87,7 +122,7 @@ app.get('/users', passport.authenticate('jwt', { session: false }), async (req, 
     
     await Users.find()
         .then((users) => {
-            res.status(201).json(users);
+            res.status(200).json(users);
         })
         .catch((error) => {
             console.error(error);
@@ -118,23 +153,40 @@ app.get('/users/:username', passport.authenticate('jwt', { session: false }), as
 // Update a user's info, by username
 /* We’ll expect JSON in this format
 {
-  username: String,
-  (required)
-  password: String,
-  email: String,
-  birthday: Date
+    username: String (required),
+    password: String (required),
+    email: String (required),
+    birthday: Date
 }*/
-app.put('/users/:username', passport.authenticate('jwt', { session: false }), async (req, res) => {
-    if (req.user.username !== req.params.username) {
+app.put('/users/:username', 
+    // Validation logic for request's body
+    [
+        check('username', "Username is required and must be at least 5 characters long").isLength({ min: 5 }),
+        check('username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+        check('password', 'Password is required and must be at least 7 characters long').isLength({ min: 7 }),
+        check('email', 'Email does not appear to be valid').isEmail()
+    ], 
+    passport.authenticate('jwt', { session: false }), 
+    async (req, res) => {
+    // Validate the request body
+    let errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() });
+    }
+    
+        if (req.user.username !== req.params.username) {
         return res.status(403).send('Permission denied');
     }
     
+    // Hash the password from input
+    let hashedPassword = Users.hashPassword(req.body.password);
+
     await Users.findOneAndUpdate( 
         { username: req.params.username }, 
         { $set: 
             {
                 username: req.body.username,
-                password: req.body.password,
+                password: hashedPassword,
                 email: req.body.email,
                 birthday: req.body.birthday
             }
@@ -155,7 +207,7 @@ app.put('/users/:username', passport.authenticate('jwt', { session: false }), as
 
 // Delete a user by username
 app.delete('/users/:username', passport.authenticate('jwt', { session: false }), async (req, res) => {
-    if (req.user.username !== req.params.username) {
+    if (req.user.username !== req.params.username && req.user.username !== 'admin') {
         return res.status(403).send('Permission denied');
     }
 

@@ -12,7 +12,7 @@ const Movies = Models.Movie;
 const Users = Models.User;
 
 // Set up mongoose connection to operate on MongoDB database using the connection string from lines 1-6
-mongoose.connect(databaseUrl, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(databaseUrl); // had to remove the the legacy options "useNewUrlParser" and "useUnifiedTopology" to get it to work with the latest mongoose version
 
 //Import necessary modules
 const express = require('express'),
@@ -66,7 +66,7 @@ app.use(express.static('public'))
 
 // GET requests
 app.get('/', (req, res) => {
-    res.send('Navigate to /documentation for API documentation.<br>Navigate to /movies to see the list of top movies.');
+    res.send('Navigate to /documentation.html for API documentation.');
 });
 
 // Users endpoints

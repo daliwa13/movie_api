@@ -1,5 +1,9 @@
-// Set up mongoose connection to operate on MongoDB database
-let databaseUrl = 'mongodb://localhost:27017/cf';
+// When using on your local machine, uncomment the following line and comment out the production databaseUrl line
+// Local MongoDB location string
+// let databaseUrl = 'mongodb://localhost:27017/cf';
+
+// Production MongoDB location string
+let databaseUrl = process.env.CONNECTION_URI;
 
 const mongoose = require('mongoose');
 const Models = require('./models.js');
@@ -7,7 +11,8 @@ const Models = require('./models.js');
 const Movies = Models.Movie;
 const Users = Models.User;
 
-mongoose.connect(databaseUrl);
+// Set up mongoose connection to operate on MongoDB database using the connection string from lines 1-6
+mongoose.connect(databaseUrl, { useNewUrlParser: true, useUnifiedTopology: true });
 
 //Import necessary modules
 const express = require('express'),

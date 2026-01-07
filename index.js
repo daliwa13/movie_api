@@ -1,9 +1,9 @@
 // When using on your local machine, uncomment the following line and comment out the production databaseUrl line
 // Local MongoDB location string
-// let databaseUrl = 'mongodb://localhost:27017/cf';
+let databaseUrl = 'mongodb://localhost:27017/cf';
 
 // Production MongoDB location string
-let databaseUrl = process.env.CONNECTION_URI;
+// let databaseUrl = process.env.CONNECTION_URI;
 
 const mongoose = require('mongoose');
 const Models = require('./models.js');
@@ -56,11 +56,10 @@ const passport = require('passport');
 require('./passport.js');
 
 // Logging setup for running on local machine; not necessary for Heroku deployment as Heroku provides its own logging
-// Access ‘log.txt’ file in root directory
-// const accessLogStream = fs.createWriteStream(path.join(__dirname, 'log.txt'), { flags: 'a' });
-
+/* // Access ‘log.txt’ file in root directory
+const accessLogStream = fs.createWriteStream(path.join(__dirname, 'log.txt'), { flags: 'a' });
 // setup the logger
-app.use(morgan('combined', { stream: accessLogStream }));
+app.use(morgan('combined', { stream: accessLogStream })); */
 
 // middleware to serve static files
 app.use(express.static('public'))
@@ -78,7 +77,7 @@ app.get('/', (req, res) => {
   username: String (required),
   password: String (required),
   email: String (required),
-  birthday: Date
+  birthDate: Date
 }*/
 app.post('/users',[
     check('username', "Username is required and must be at least 5 characters long").isLength({min: 5}),
@@ -105,7 +104,7 @@ app.post('/users',[
                         username: req.body.username,
                         password: hashedPassword,
                         email: req.body.email,
-                        birthday: req.body.birthday
+                        birthDate: req.body.birthDate
                     })
                     .then((user) => { res.status(201).json(user) })
                     .catch((error) => {
@@ -162,7 +161,7 @@ app.get('/users/:username', passport.authenticate('jwt', { session: false }), as
     username: String (required),
     password: String (required),
     email: String (required),
-    birthday: Date
+    birthDate: Date
 }*/
 app.put('/users/:username', 
     // Validation logic for request's body
@@ -194,7 +193,7 @@ app.put('/users/:username',
                 username: req.body.username,
                 password: hashedPassword,
                 email: req.body.email,
-                birthday: req.body.birthday
+                birthDate: req.body.birthDate
             }
         },
         { new: true }) // This line makes sure that the updated document is returned

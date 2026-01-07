@@ -1,9 +1,9 @@
 // When using on your local machine, uncomment the following line and comment out the production databaseUrl line
 // Local MongoDB location string
-let databaseUrl = 'mongodb://localhost:27017/cf';
+// let databaseUrl = 'mongodb://localhost:27017/cf';
 
 // Production MongoDB location string
-// let databaseUrl = process.env.CONNECTION_URI;
+let databaseUrl = process.env.CONNECTION_URI;
 
 const mongoose = require('mongoose');
 const Models = require('./models.js');

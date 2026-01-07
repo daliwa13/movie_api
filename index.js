@@ -55,8 +55,9 @@ require('./auth.js')(app);
 const passport = require('passport');
 require('./passport.js');
 
+// Logging setup for running on local machine; not necessary for Heroku deployment as Heroku provides its own logging
 // Access ‘log.txt’ file in root directory
-const accessLogStream = fs.createWriteStream(path.join(__dirname, 'log.txt'), { flags: 'a' });
+// const accessLogStream = fs.createWriteStream(path.join(__dirname, 'log.txt'), { flags: 'a' });
 
 // setup the logger
 app.use(morgan('combined', { stream: accessLogStream }));

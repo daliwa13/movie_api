@@ -35,7 +35,7 @@ app.use(express.urlencoded({ extended: true }));
 const cors = require('cors');
 app.use(cors());
 
-let allowedOrigins = ['http://localhost:8080', 'https://my-flix-2a35e956c61d.herokuapp.com/']; // Updated once deployment is done
+let allowedOrigins = ['http://localhost:8080', 'http://localhost:1234', 'https://my-flix-2a35e956c61d.herokuapp.com/']; // Added localhost:1234 for testing with parcel
 
 app.use(cors({
     origin: (origin, callback) => {

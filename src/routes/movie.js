@@ -8,7 +8,7 @@ const passport = require('passport');
 
 // Movies endpoints
 // READ all movies
-router.get('/', async (req, res) => {
+router.get('/', passport.authenticate('jwt', { session: false }), async (req, res) => {
   await Movies.find()
     .then((movies) => {
       res.status(200).json(movies);

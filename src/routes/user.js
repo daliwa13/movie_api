@@ -6,6 +6,7 @@ const router = express.Router();
 
 const Models = require('../models');
 const Users = Models.User;
+const Movies = Models.Movie;
 
 const passport = require('passport');
 
